@@ -1,0 +1,58 @@
+body {
+  background: #A2A239;
+  text-align: center;
+}
+@media (max-width: 200px) {
+  #header-img {
+  background-color: lightblue;
+  }
+}
+form {
+  background: #72A232;
+  width: 500px;
+  margin: auto;
+}
+#submit {
+  height: 30px;
+  width: 65px;
+  border-radius: 30%;
+  color: #90008B;
+  font-weight: bold;
+
+}
+#title {
+  color: #052F13;
+}
+img {
+ display: block;
+ max-width: 90%;
+ margin: auto;
+}
+#boxes1 {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 200px;
+  width: 100px;
+  background-color: lightblue;
+}
+input[type=checkbox] {
+  transform: scale(2);
+}
+.boxes-table{
+  display: flex;
+  justify-content: flex-start;
+  background-color: green;
+  height: 200px;
+  width: 500px;
+}
+#ctaCombineText {
+  display:flex;
+  height: 40px;
+  width: 80px;
+  border-radius: 25%;
+}
+#combinedText {
+  height: 300px;
+  width: 500px;
+}
