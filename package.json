@@ -1,0 +1,23 @@
+{
+  "name": "hunterreportglue",
+  "version": "1.0.0",
+  "description": "",
+  "main": "testNode.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oldGreg5/hunterReportGlue.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/oldGreg5/hunterReportGlue/issues"
+  },
+  "homepage": "https://github.com/oldGreg5/hunterReportGlue#readme",
+  "dependencies": {
+    "iconv-lite": "^0.4.24",
+    "requirejs": "^2.3.6"
+  }
+}
