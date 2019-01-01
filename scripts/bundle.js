@@ -6196,6 +6196,7 @@ module.exports = safer
 
 }).call(this,require('_process'))
 },{"_process":6,"buffer":4}],29:[function(require,module,exports){
+(function (Buffer){
 var iconv = require('iconv-lite');
 var fs = require('fs');
 
@@ -6204,23 +6205,49 @@ function myFunction() {
   txtField.innerHTML = txtField.innerHTML + "grass";
 }
 
-function loadDescriptionFile() {
-  console.log("fdfdfdfdf");
+function loadDescriptionFileHelper() {
+  // console.log("fdfdfdfdf");
   var fileName =  "HunterWyniki.txt";
   txtField = document.getElementById("combinedText");
 
+var txt;
   fetch(fileName)
   .then(response => response.text())
-  .then(text => console.log(text))
-  // .then(text => txtField.innerHTML = text)
+  // .then((text) => return text)
+     // {
 
-  // var fetchedText;
-  // fetch('HunterWyniki.txt')
+    // console.log(txt)
+    // txt = text
+    // txtField.innerHTML = txt
+  // })
   // .then(response => response.text())
-  // .then(text => fetchedText=text)
-  // console.log(fetchedText);
-  // txtField = document.getElementById("combinedText");
-  // txtField.innerHTML = fetchedText;
+  // .then(converted => console.log(converted))
+  // .then(arrayBuffer => iconv.decode(new Buffer(arrayBuffer), 'iso-8859-1').toString())
+  // .then(converted => console.log(converted))
+// txtField.innerHTML = txt
+ // console.log(txt)
+  // fetch(fileName)
+  // .then(response => response.text())
+  // .then(text => txtField.innerHTML = text)
+  // .then(text => console.log(text))
+
 }
 
-},{"fs":1,"iconv-lite":27}]},{},[29]);
+async function loadDescriptionFile(){
+  // var txt = loadDescriptionFileHelper()
+  var fileName =  "HunterWyniki.txt";
+  const response = await fetch(fileName)
+  const txt = await response.text()
+  // const decodedText = iconv.decode(Buffer.from(txt, 'latin1'), 'latin1')
+  // , output = iconv.encode(decodedText, 'utf8')
+  // Convert from an encoded buffer to js string.
+str = iconv.decode(Buffer.from([0x68, 0x65, 0x6c, 0x6c, 0x6f]), 'win1251');
+
+// Convert from js string to an encoded buffer.
+buf = iconv.encode("Sample input string", 'win1251');
+console.log(str)
+  console.log(buf)
+}
+
+}).call(this,require("buffer").Buffer)
+},{"buffer":4,"fs":1,"iconv-lite":27}]},{},[29]);

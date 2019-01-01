@@ -1,17 +1,17 @@
 >>Patogeny
-^Streptococcus Pyogenes$jest jednym z najczêstszych patogenów cz³owieka. Jako sk³adnik mikroflory dróg oddechowych S.pyogenes mo¿e powodowaæ zaka¿enia w przypadku obni¿onej odpornoœci organizmu cz³owieka, jako powik³anie choroby wirusowej lub bakteryjnej lub zaburzenia w równowadze mikroflory fizjologicznej. 
-^Dientamoeba Fragilis$Jest to jeden z mniejszych pierwotniaków paso¿ytuj¹cych w przewodzie pokarmowym cz³owieka. Bezobjawowa kolonizacja ma miejsce u 75–85% zaka¿onych osób, jednak w przypadku dzieci objawy pojawiaj¹ siê w 90% przypadków. Objawy ostrej infekcji utrzymuj¹ siê 1–2 tygodnie. Stolce s¹ br¹zowozielone, niekiedy z domieszk¹ œluzu. Objawem przewlek³ej infekcji jest trwaj¹cy kilka miesiêcy ból brzucha.
-^Enterococcum Faecium$Fizjologicznie wystêpuje w przewodzie pokarmowym cz³owieka, jednak mo¿e byæ równie¿ czynnikiem chorobotwórczym i wywo³ywaæ np. zaka¿enie uk³adu moczowego, zapalenie wsierdzia
-^Bacterioides Fragilis$Wchodz¹ one w sk³ad fizjologicznej flory bakteryjnej przewodu pokarmowego cz³owieka i s¹ najliczniejsze spoœród wszystkich bakterii wchodz¹cych w jej sk³ad.Mog¹ wywo³aæ zaka¿enia oportunistyczne m.in. w obrêbie jamy brzusznej, bakteriemiê.
-^Lamblia Intestinalis$Pierwotniak paso¿ytuje w jelicie cienkim cz³owieka, zw³aszcza w dwunastnicy. Wiêkszoœæ zara¿eñ przebiega bezobjawowo. Choroba mo¿e rozpocz¹æ siê nagle lub stopniowo nasilaj¹cymi siê dolegliwoœciami (oko³o 1-3 tygodnie od zara¿enia). W zale¿noœci od zajêtego odcinka przewodu pokarmowego i stanu immunologicznego pacjenta nasilenie objawów jest ró¿ne. Do najczêstszych dolegliwoœci nale¿¹ ból brzucha (zazwyczaj po jedzeniu) i biegunka (o ró¿nym nasileniu, charakterze t³uszczowym lub fermentacyjnym). Stolce s¹ jasne, papkowate, t³uszczowe, o przykrym zapachu i z du¿¹ zawartoœci¹ powietrza. Mog¹ dominowaæ objawy ze strony górnego odcinka przewodu pokarmowego – nudnoœci, wymioty, odbijania, wzdêcia. Ostra postaæ choroby trwa oko³o tygodnia, czêsto zdarzaj¹ siê nawroty.
-^Cytomegalovirus$stanowi jedn¹ z podrodzin herpeswirusa HHV-5. Jest wirusem szeroko rozpowszechnionym. U zdrowych osób doros³ych zaka¿enie CMV przebiega bezobjawowo lub daje niewielkie objawy chorobowe.
+^Streptococcus Pyogenes$jest jednym z najczęstszych patogenów człowieka. Jako składnik mikroflory dróg oddechowych S.pyogenes może powodować zakażenia w przypadku obniżonej odporności organizmu człowieka, jako powikłanie choroby wirusowej lub bakteryjnej lub zaburzenia w równowadze mikroflory fizjologicznej. 
+^Dientamoeba Fragilis$Jest to jeden z mniejszych pierwotniaków pasożytujących w przewodzie pokarmowym człowieka. Bezobjawowa kolonizacja ma miejsce u 75–85% zakażonych osób, jednak w przypadku dzieci objawy pojawiają się w 90% przypadków. Objawy ostrej infekcji utrzymują się 1–2 tygodnie. Stolce są brązowozielone, niekiedy z domieszką śluzu. Objawem przewlekłej infekcji jest trwający kilka miesięcy ból brzucha.
+^Enterococcum Faecium$Fizjologicznie występuje w przewodzie pokarmowym człowieka, jednak może być również czynnikiem chorobotwórczym i wywoływać np. zakażenie układu moczowego, zapalenie wsierdzia
+^Bacterioides Fragilis$Wchodzą one w skład fizjologicznej flory bakteryjnej przewodu pokarmowego człowieka i są najliczniejsze spośród wszystkich bakterii wchodzących w jej skład.Mogą wywołać zakażenia oportunistyczne m.in. w obrębie jamy brzusznej, bakteriemię.
+^Lamblia Intestinalis$Pierwotniak pasożytuje w jelicie cienkim człowieka, zwłaszcza w dwunastnicy. Większość zarażeń przebiega bezobjawowo. Choroba może rozpocząć się nagle lub stopniowo nasilającymi się dolegliwościami (około 1-3 tygodnie od zarażenia). W zależności od zajętego odcinka przewodu pokarmowego i stanu immunologicznego pacjenta nasilenie objawów jest różne. Do najczęstszych dolegliwości należą ból brzucha (zazwyczaj po jedzeniu) i biegunka (o różnym nasileniu, charakterze tłuszczowym lub fermentacyjnym). Stolce są jasne, papkowate, tłuszczowe, o przykrym zapachu i z dużą zawartością powietrza. Mogą dominować objawy ze strony górnego odcinka przewodu pokarmowego – nudności, wymioty, odbijania, wzdęcia. Ostra postać choroby trwa około tygodnia, często zdarzają się nawroty.
+^Cytomegalovirus$stanowi jedną z podrodzin herpeswirusa HHV-5. Jest wirusem szeroko rozpowszechnionym. U zdrowych osób dorosłych zakażenie CMV przebiega bezobjawowo lub daje niewielkie objawy chorobowe.
 
 >>Jednostki chorobowe
 ^Zapalenia oskrzeli$
 ^Arytmii$
-^syndromu jelita dra¿liwego$
+^syndromu jelita drażliwego$
 ^Zapalenia oskrzelików$
-^Zapaleñ pêcherza i miedniczek nerkowych (cystopyelitis)$
-^Sigmoiditis$stan zapalny esicy okrê¿nicy o przebiegu ostrym lub przewlek³ym
-^Zwyrodnienia kr¹¿ków miêdzykrêgowych (Miêdzykrêgowa osteochondroza)$
-^Scapulohumeral periarthritis$dolegliwoœci zwi¹zane z bólami ramion
+^Zapaleń pęcherza i miedniczek nerkowych (cystopyelitis)$
+^Sigmoiditis$stan zapalny esicy okrężnicy o przebiegu ostrym lub przewlekłym
+^Zwyrodnienia krążków międzykręgowych (Międzykręgowa osteochondroza)$
+^Scapulohumeral periarthritis$dolegliwości związane z bólami ramion
