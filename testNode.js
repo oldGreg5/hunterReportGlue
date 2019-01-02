@@ -20,7 +20,7 @@ function requestCss(req,res) {
 }
 function requestJs(req,res) {
   if (req.url.match("bundle.js")){
-    fs.readFile('./scripts/hunterReport.js', function(err, data) {
+    fs.readFile('./scripts/bundle.js', function(err, data) {
       res.writeHead(200, {'Content-Type': 'text/javascript'});
       res.write(data);
       res.end();

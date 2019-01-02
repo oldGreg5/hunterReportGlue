@@ -1,5 +1,21 @@
-var iconv = require('iconv-lite');
+// var iconv = require('iconv-lite')
+var debug = require('debug')('app')
+var _ = require('lodash');
+var $ = require('jquery');
 // var fs = require('fs');
+
+global.window.test1 = test1
+global.window.myFunction = myFunction
+global.window.loadDescriptionFile = loadDescriptionFile
+
+function test1(){
+_([1,2,3,4,5,6,7,8,9,1,2,3,4,5,6,7,1,2,3,4,5,6,1,2,3,3,1])
+    .uniq()
+    .each(function(i){
+        console.log(i);
+        $("#combinedText").append(" " + i + " ");
+    });
+  }
 
 function myFunction() {
   txtField = document.getElementById("combinedText");
@@ -47,3 +63,5 @@ async function loadDescriptionFile(){
   txtField = document.getElementById("combinedText");
   txtField.innerHTML = txt;
 }
+
+  
