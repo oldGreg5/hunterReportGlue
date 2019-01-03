@@ -1,6 +1,5 @@
 var http = require('http');
 var fs = require('fs');
-// var iconv = require('iconv-lite');
 
 http.createServer(function (req, res) {
         requestCss(req, res);
