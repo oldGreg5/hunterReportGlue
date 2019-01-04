@@ -1,5 +1,7 @@
-var iconv = require('iconv-lite');
+// var iconv = require('iconv-lite');
 var $ = require('jquery');
+
+window.loadDescriptionFile = loadDescriptionFile
 
 function myFunction() {
   txtField = document.getElementById("combinedText");
@@ -28,16 +30,30 @@ async function loadDescriptionFile(){
   txt = await response.text()
   txt = parseDescriptionFile(txt)
 
-
-  console.log(txt)
-  txtField = document.getElementById("combinedText");
-  txtField.innerHTML = txt;
 }
 
 function parseDescriptionFile(text) {
   text = text.split('>>')
   text.splice(0,1)
   console.log(text.length);
-   
+  
+  for (i =0; i<text.length; i++){
+    text1 = text[i].split('^')
+    text1.splice(0,1)
+    console.log(">>>"+text1);
+    idName = text[i].split('^')[0]
+    divToAdd = '<div id=type'+ i +'>'+idName
+    $('#descriptionsTable').append(divToAdd)
+    for (j =0; j<text1.length; j++){
+      labelToAdd = '<label for=box'+j+'><input type=checkbox name=radioGroup>'+text1[j]+'</label>'
+      console.log(labelToAdd);
+      
+      $('#type'+i).append(labelToAdd)
+    }
+    $('#descriptionsTable').append('</div>')
+    
 
+  }
+  // console.log(">>>"+text);
 }
+
