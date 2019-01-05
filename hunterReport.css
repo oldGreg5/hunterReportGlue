@@ -28,12 +28,13 @@ img {
  max-width: 90%;
  margin: auto;
 }
-#boxes1 {
+.boxes {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  align-items: flex-start;
   height: 200px;
-  width: 100px;
+  width: 800px;
   background-color: lightblue;
 }
 input[type=checkbox] {
@@ -44,7 +45,7 @@ input[type=checkbox] {
   justify-content: flex-start;
   background-color: green;
   height: 200px;
-  width: 500px;
+  width: 1800px;
 }
 #ctaCombineText {
   display:flex;

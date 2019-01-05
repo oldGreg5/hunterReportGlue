@@ -10409,15 +10409,16 @@ function parseDescriptionFile(text) {
     text1.splice(0,1)
     console.log(">>>"+text1);
     idName = text[i].split('^')[0]
-    divToAdd = '<div id=type'+ i +'>'+idName
+    divToAdd = '<div id=type'+ i +' class=boxes>'+idName
     $('#descriptionsTable').append(divToAdd)
     for (j =0; j<text1.length; j++){
-      labelToAdd = '<label for=box'+j+'><input type=checkbox name=radioGroup>'+text1[j]+'</label>'
+      itemToAdd = text1[j].split('$')[0]
+      labelToAdd = '<label for=box'+j+'><input type=checkbox name=radioGroup>'+itemToAdd+'</label>'
       console.log(labelToAdd);
       
       $('#type'+i).append(labelToAdd)
     }
-    $('#descriptionsTable').append('</div>')
+    $('#descriptionsTable').append('</div><br>')
     
 
   }
