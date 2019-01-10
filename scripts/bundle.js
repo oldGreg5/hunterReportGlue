@@ -10369,6 +10369,7 @@ return jQuery;
 var $ = require('jquery');
 
 window.combineDescription = combineDescription
+window.loadDescriptionFileHelper = loadDescriptionFileHelper
 var desciptionPairs = new Map();
 
 function myFunction() {
@@ -10377,12 +10378,14 @@ function myFunction() {
 }
 
 function loadDescriptionFileHelper() {
-  var fileName =  "HunterWyniki.txt";
-  txtField = document.getElementById("combinedText");
+  loadAndParseDescriptionFile()
+  // $('#combinedText').html("sasasasasa")
+//   var fileName =  "HunterWyniki.txt";
+//   txtField = document.getElementById("combinedText");
 
-var txt;
-  fetch(fileName)
-  .then(response => response.text())
+// var txt;
+//   fetch(fileName)
+//   .then(response => response.text())
 
   // .then(response => response.text()
   // .then(converted => console.log(converted))
@@ -10392,21 +10395,28 @@ var txt;
 }
 
 function combineDescription() {
-  loadAndParseDescriptionFile()
+  // loadAndParseDescriptionFile()
   combineText()
 }
 
 function combineText(){
   var boxNodes = $('.propBox')
+  addToOutput("")
+  console.log('size: '+ boxNodes[4].checked);
   for (i = 0; i < boxNodes.size; i++){
-    if (boxNodes[i].checked) {
+    // if (boxNodes[i].checked) {
+      addToOutput("true ")
       prop = boxNodes[i].parentNode.innerHTML.split('>')[1]
       val = desciptionPairs.get(prop)
       gluedText = $('#combinedText')
       gluedText += prop + " - " + val
-      $('#combinedText').html(gluedText)
-    }
+      addToOutput("sasasasasa")
+    // }
   }
+}
+
+function addToOutput(text){
+  $('#combinedText').html($('#combinedText').html()+text)
 }
 
 async function loadAndParseDescriptionFile(){
@@ -10418,10 +10428,10 @@ async function loadAndParseDescriptionFile(){
 }
 
 function parseDescriptionFile(text) {
+  // $('#combinedText').html("sasasasasa")
   text = text.split('>>')
   text.splice(0,1)
   // console.log(text.length);
-  
 
   for (i =0; i<text.length; i++){
     text1 = text[i].split('^')
@@ -10446,7 +10456,6 @@ function parseDescriptionFile(text) {
   // console.log(">>>" + desciptionPairs.get("Lamblia Intestinalis"));
   console.log("box: " + $('.propBox')[2].parentNode.innerHTML.split('>')[1]);
   console.log('checked: '+ $('.propBox')[2].checked);
-  
 }
 
 
