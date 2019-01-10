@@ -10402,16 +10402,18 @@ function combineDescription() {
 function combineText(){
   var boxNodes = $('.propBox')
   addToOutput("")
-  console.log('size: '+ boxNodes[4].checked);
-  for (i = 0; i < boxNodes.size; i++){
-    // if (boxNodes[i].checked) {
-      addToOutput("true ")
+  console.log('size: '+ boxNodes.length);
+  for (i = 0; i < boxNodes.length; i++){
+    if (boxNodes[i].checked) {
+      console.log('true');
+      
+      // addToOutput("true ")
       prop = boxNodes[i].parentNode.innerHTML.split('>')[1]
       val = desciptionPairs.get(prop)
       gluedText = $('#combinedText')
       gluedText += prop + " - " + val
-      addToOutput("sasasasasa")
-    // }
+      addToOutput(prop + " - " + val)
+    }
   }
 }
 
