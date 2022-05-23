@@ -28,23 +28,26 @@ img {
  max-width: 90%;
  margin: auto;
 }
-#boxes1 {
+.boxes {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  align-items: flex-start;
+  text-align: left;
   height: 200px;
-  width: 100px;
-  background-color: lightblue;
+  width: 250px;
 }
 input[type=checkbox] {
-  transform: scale(2);
+  transform: scale(1.8);
 }
 .boxes-table{
   display: flex;
-  justify-content: flex-start;
-  background-color: green;
-  height: 200px;
-  width: 500px;
+  justify-content: center;
+  align-items: baseline;
+  align-content: space-around;
+  background-color: lightblue;
+  height: 300px;
+  width: 1800px;
 }
 #ctaCombineText {
   display:flex;

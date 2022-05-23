@@ -1,4 +1,4 @@
-<script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script>
+<!-- <script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script> -->
 
 <head>
   <link rel="stylesheet" type="text/css" href="hunterReport.css">
@@ -9,32 +9,33 @@
     <a class="nav-link" href="#middle-part">#Middle</a>
     <a class="nav-link" href="#outro-part">#Outro</a>
   </nav>
-  <img id="header-img" src="https://www.logolynx.com/images/logolynx/d7/d7e640a486e20915b5bb035fc7a7e922.jpeg">
+  <!-- <img id="header-img" src="https://www.logolynx.com/images/logolynx/d7/d7e640a486e20915b5bb035fc7a7e922.jpeg"> -->
 </header>
 
-<body>
-  <div class="boxes-table">
-    <div id="boxes1">attr1
-      <label for="box1"><input type=checkbox name=radioGroup value="1" onclick="myFunction()">prop1</label>
-      <label for="box1"><input type=checkbox name=radioGroup value="2">prop2</label>
-      <label for="box1"><input type=checkbox name=radioGroup value="3">prop3</label>
-      <label for="box1"><input type=checkbox name=radioGroup value="4">prop4</label>
-      <label for="box1"><input type=checkbox name=radioGroup value="5">prop5</label>
-    </div><br>
-    <div id="boxes1">attr2
+<body onload="loadDescriptionFileHelper()">
+  <div id="descriptionsTable" class="boxes-table">
+    <!-- <div id="boxes1" class='boxes'>Patogeny
+      <label for="box1"><input type=checkbox name=radioGroup value="1" onclick="myFunction()">Streptococcus Pyogenes</label>
+      <label for="box1"><input type=checkbox name=radioGroup value="2" onclick="loadDescriptionFile()">Dientamoeba Fragilis</label>
+      <label for="box1"><input type=checkbox name=radioGroup value="3">Enterococcum Faecium</label>
+      <label for="box1"><input type=checkbox name=radioGroup value="4">Bacterioides Fragilis</label>
+      <label for="box1"><input type=checkbox name=radioGroup value="5">Lamblia Intestinalis</label>
+    </div><br> -->
+    <!-- <div id="boxes1" class='boxes'>attr2
       <label for="box1"><input type=checkbox name=radioGroup value="1">prop1</label>
       <label for="box1"><input type=checkbox name=radioGroup value="2">prop2</label>
       <label for="box1"><input type=checkbox name=radioGroup value="3">prop3</label>
       <label for="box1"><input type=checkbox name=radioGroup value="4">prop4</label>
       <label for="box1"><input type=checkbox name=radioGroup value="5">prop5</label>
-    </div>
+    </div> -->
   </div><br>
-  <button id="ctaCombineText" type="button" name="button" onclick="myFunction2()">Combine</button>
+  <button id="ctaCombineText" type="button" name="button" onclick="combineDescription()">Combine</button>
   <!-- <div id="CtaCombine" type="button" name="button"> -->
   <textarea id="combinedText" charset="windows-1250">
 
   </textarea>
-  <script type="text/javascript" src="hunterReport.js">
-
-  </script>
+  <!-- <script data-main="scripts/hunterReport" src="scripts/require.js"></script> -->
+  <script src="./scripts/bundle.js"></script>
+  <!-- <script src="htmlRouter.js"></script> -->
+  <!-- <script src="scripts/hunterReport.js"></script> -->
 </body>
