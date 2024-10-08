@@ -37,7 +37,7 @@ function requestHome(req,res) {
 }
 function requestDescription(req,res) {
   if (req.url.match("HunterWyniki.txt")){
-    fs.readFile('./HunterWyniki.txt', function(err, data) {
+    fs.readFile('./data/HunterWyniki.txt', function(err, data) {
       res.writeHead(200, {'Content-Type': 'text'});
       res.write(data);
       res.end();

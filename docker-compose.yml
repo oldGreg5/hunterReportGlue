@@ -1,0 +1,15 @@
+version: '1.1'
+services:
+  app:
+    build: .
+    ports:
+      - '8089:8089'
+  ngrok:
+    image: wernight/ngrok
+    ports:
+      - '8089:8089'
+    environment:
+      - NGROK_PORT=8089
+      - NGROK_REGION=eu
+      - NGROK_AUTH=2UcEzMCN4yh1KSOCbW1yzPuqJBI_3ejEmTR29dLqdYcjAZFbv
+      - NGROK_PROTOCOL=http
