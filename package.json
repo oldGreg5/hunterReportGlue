@@ -1,9 +1,17 @@
 {
   "name": "hunterreportglue",
   "version": "1.0.0",
-  "description": "",
+  "description": "Hunter Report Generator Application",
   "main": "testNode.js",
   "scripts": {
+    "start": "node testNode.js",
+    "dev": "nodemon testNode.js",
+    "build": "browserify scripts/hunterReport.js -o scripts/bundle.js",
+    "docker:build": "docker build -t hunter-report-app .",
+    "docker:run": "docker run -d -p 8089:8089 --name hunter-report-app hunter-report-app",
+    "docker:stop": "docker stop hunter-report-app && docker rm hunter-report-app",
+    "docker:compose:up": "docker-compose up -d",
+    "docker:compose:down": "docker-compose down",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -22,7 +30,11 @@
     "lodash": "^4.17.11"
   },
   "devDependencies": {
+    "browserify": "^17.0.0",
     "nodemon": "^2.0.16",
     "pm2": "^5.2.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
   }
 }

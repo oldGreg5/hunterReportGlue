@@ -8,27 +8,47 @@ var desciptionPairs = new Map();
 function combineDescription() {
     let textHtml = combineText();
     writeToNicEdit(textHtml);
+    
+    // Copy the text to clipboard
+    writeTextToClipboard(textHtml)
+        .then(() => {
+            // Show a success notification
+            showNotification('Report generated and copied to clipboard!');
+        })
+        .catch(err => {
+            console.error('Failed to copy to clipboard:', err);
+            showNotification('Report generated, but copying to clipboard failed.', 'error');
+        });
 }
 
 function combineText() {
     var boxNodes = $('.propBox');
     console.log('size: ' + boxNodes.length);
-    let gluedText='';
+    let gluedText = '';
+    
     for (i = 0; i < boxNodes.length; i++) {
         if (boxNodes[i].checked) {
-            console.log('true');
-
-            let prop = boxNodes[i].parentNode.innerHTML.split('>')[1];
+            console.log('Checkbox ' + i + ' is checked');
+            
+            // Get the item name from the span element
+            let prop = boxNodes[i].parentNode.querySelector('span').getAttribute('data-original-text') || 
+                       boxNodes[i].parentNode.querySelector('span').innerText;
+            console.log('Item name: ' + prop);
+            
+            // Look up the description in the map
             let val = desciptionPairs.get(prop);
+            console.log('Description: ' + val);
+            
+            // Add to the output text
             gluedText += "<b>";
             gluedText += prop;
             gluedText += "</b>";
             gluedText += " - ";
-            gluedText += val;
+            gluedText += val || ''; // Handle undefined descriptions
             gluedText += "<br>";
-            console.log(gluedText);
         }
     }
+    
     return gluedText;
 }
 
@@ -39,12 +59,227 @@ function writeToNicEdit(text) {
 }
 
 async function loadAndParseDescriptionFile() {
-    new nicEditor().panelInstance('combinedText');
+    // Create a more compact editor with fewer buttons
+    new nicEditor({
+        buttonList: ['bold', 'italic', 'underline', 'left', 'center', 'right', 'ol', 'ul', 'fontSize', 'fontFamily']
+    }).panelInstance('combinedText');
+    
     var fileName = "HunterWyniki.txt";
     const response = await fetch(fileName);
     let txt = await response.text();
     parseDescriptionFile(txt);
+    
+    // Setup search functionality after items are loaded
+    setupSearch();
+}
 
+function setupSearch() {
+    const searchBox = $('#searchBox');
+    const searchClear = $('#searchClear');
+    
+    // Show/hide clear button based on search content
+    searchBox.on('input', function() {
+        const searchText = $(this).val().trim();
+        
+        // Show/hide clear button
+        if (searchText.length > 0) {
+            searchClear.show();
+        } else {
+            searchClear.hide();
+        }
+        
+        // Handle multi-line input (list of items)
+        if (searchText.includes('\n')) {
+            handleMultilineSearch(searchText);
+        } else {
+            // Single line search
+            filterItems(searchText.toLowerCase());
+        }
+    });
+    
+    // Clear search when the × is clicked
+    searchClear.on('click', function() {
+        searchBox.val('').focus();
+        searchClear.hide();
+        filterItems('');
+    });
+    
+    // Add keyboard shortcut (Escape key) to clear search
+    $(document).on('keydown', function(e) {
+        if (e.key === 'Escape' && document.activeElement === searchBox[0]) {
+            searchBox.val('').blur();
+            searchClear.hide();
+            filterItems('');
+        }
+    });
+    
+    // Handle pasted content
+    searchBox.on('paste', function(e) {
+        // We'll let the input event handle the actual processing
+        // This just ensures the textarea can handle multi-line content
+        setTimeout(() => {
+            const searchText = $(this).val().trim();
+            if (searchText.includes('\n')) {
+                handleMultilineSearch(searchText);
+            }
+        }, 0);
+    });
+    
+    // Hide clear button initially
+    searchClear.hide();
+    
+    // Function to handle multi-line search (list of items)
+    function handleMultilineSearch(searchText) {
+        // Split the input by new lines
+        const items = searchText.split('\n').filter(item => item.trim() !== '');
+        
+        // Reset all checkboxes
+        $('.propBox').prop('checked', false);
+        
+        // For each item in the list, try to find and mark matching items
+        items.forEach(item => {
+            const searchTerm = item.trim().toLowerCase();
+            if (searchTerm) {
+                markMatchingItem(searchTerm);
+            }
+        });
+        
+        // Update the search box with the processed items
+        searchBox.val(items.join('\n'));
+        
+        // Show notification
+        const matchedCount = $('.propBox:checked').length;
+        if (matchedCount > 0) {
+            showNotification(`Marked ${matchedCount} item${matchedCount > 1 ? 's' : ''}`, 'success');
+        }
+    }
+    
+    // Function to mark an item that matches the search term
+    function markMatchingItem(searchTerm) {
+        let exactMatches = [];
+        let partialMatches = [];
+        
+        // Find all potential matches
+        $('.item-label span').each(function() {
+            const span = $(this);
+            const originalText = span.attr('data-original-text') || span.text();
+            const itemText = originalText.toLowerCase();
+            
+            // Store original text if not already stored
+            if (!span.attr('data-original-text')) {
+                span.attr('data-original-text', originalText);
+            }
+            
+            // Check for exact match
+            if (itemText === searchTerm) {
+                exactMatches.push(span.parent());
+            } 
+            // Check for partial match
+            else if (itemText.includes(searchTerm)) {
+                partialMatches.push(span.parent());
+            }
+        });
+        
+        // If we have exactly one exact match or one partial match when no exact matches exist
+        if (exactMatches.length === 1) {
+            // We have an unambiguous exact match, mark it
+            const checkbox = exactMatches[0].find('.propBox');
+            checkbox.prop('checked', true);
+            return true;
+        } else if (exactMatches.length === 0 && partialMatches.length === 1) {
+            // We have an unambiguous partial match, mark it
+            const checkbox = partialMatches[0].find('.propBox');
+            checkbox.prop('checked', true);
+            return true;
+        }
+        
+        return false;
+    }
+    
+    // Function to filter items based on search term
+    function filterItems(searchTerm) {
+        if (searchTerm === '') {
+            // Show all items if search is empty
+            $('.boxes').removeClass('hidden-item');
+            $('label').removeClass('hidden-item');
+            $('label span').each(function() {
+                const originalText = $(this).attr('data-original-text');
+                if (originalText) {
+                    $(this).html(originalText); // Restore original text
+                }
+            });
+            return;
+        }
+        
+        // First reset all items to visible and remove highlights
+        $('.boxes').removeClass('hidden-item');
+        $('label').removeClass('hidden-item');
+        
+        // Track if we have an unambiguous match to auto-select
+        let exactMatches = [];
+        let partialMatches = [];
+        
+        // Process each category box
+        $('.boxes').each(function() {
+            let boxHasMatch = false;
+            const categoryBox = $(this);
+            
+            // Check each label in this category
+            categoryBox.find('label').each(function() {
+                const label = $(this);
+                const span = label.find('span');
+                const originalText = span.attr('data-original-text') || span.text();
+                
+                // Store original text if not already stored
+                if (!span.attr('data-original-text')) {
+                    span.attr('data-original-text', originalText);
+                }
+                
+                const labelText = originalText.toLowerCase();
+                
+                if (labelText.includes(searchTerm)) {
+                    boxHasMatch = true;
+                    
+                    // Highlight the matching text
+                    const regex = new RegExp('(' + escapeRegExp(searchTerm) + ')', 'gi');
+                    const highlightedText = originalText.replace(regex, '<span class="highlight">$1</span>');
+                    span.html(highlightedText);
+                    
+                    label.removeClass('hidden-item');
+                    
+                    // Track exact and partial matches for auto-selection
+                    if (labelText === searchTerm) {
+                        exactMatches.push(label);
+                    } else {
+                        partialMatches.push(label);
+                    }
+                } else {
+                    label.addClass('hidden-item');
+                }
+            });
+            
+            // Hide the entire category if it has no matches
+            if (!boxHasMatch) {
+                categoryBox.addClass('hidden-item');
+            }
+        });
+        
+        // If we have exactly one match, auto-select it
+        if (exactMatches.length === 1) {
+            // We have an unambiguous exact match, mark it
+            const checkbox = exactMatches[0].find('.propBox');
+            checkbox.prop('checked', true);
+        } else if (exactMatches.length === 0 && partialMatches.length === 1) {
+            // We have an unambiguous partial match, mark it
+            const checkbox = partialMatches[0].find('.propBox');
+            checkbox.prop('checked', true);
+        }
+    }
+    
+    // Helper function to escape special regex characters
+    function escapeRegExp(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
 }
 
 function parseDescriptionFile(text) {
@@ -55,39 +290,139 @@ function parseDescriptionFile(text) {
         text1 = text[i].split('^');
         text1.splice(0, 1);
         idName = text[i].split('^')[0];
-        divToAdd = '<div id=type' + i + ' class=boxes>' + idName;
+        divToAdd = '<div id=type' + i + ' class=boxes><h3>' + idName + '</h3>';
         $('#descriptionsTable').append(divToAdd);
         for (j = 0; j < text1.length; j++) {
+            // Extract just the item name (before the $ sign)
             keyToAdd = text1[j].split('$')[0];
             valueToAdd = text1[j].split('$')[1];
+            
+            // Store in the map for report generation
             desciptionPairs.set(keyToAdd, valueToAdd);
-            labelToAdd = '<label for=box' + j + '><input type=checkbox class=propBox name=radioGroup>' + keyToAdd + '</label>';
-            // console.log(labelToAdd);
-
+            
+            // Use a unique ID for each checkbox based on category and item
+            const checkboxId = 'box_' + i + '_' + j;
+            
+            // Only use the item name in the label
+            labelToAdd = '<label for="' + checkboxId + '" class="item-label"><input id="' + checkboxId + '" type="checkbox" class="propBox" name="radioGroup"><span>' + keyToAdd + '</span></label>';
+            
             $('#type' + i).append(labelToAdd)
         }
-        $('#descriptionsTable').append('</div><br>')
-
+        $('#descriptionsTable').append('</div>')
     }
     console.log(">> Pairs size:" + desciptionPairs.size);
-    console.log("box: " + $('.propBox')[2].parentNode.innerHTML.split('>')[1]);
-    console.log('checked: ' + $('.propBox')[2].checked);
+    
+    // Only log checkbox info if we have checkboxes
+    if ($('.propBox').length > 2) {
+        console.log("box: " + $('.propBox')[2].parentNode.querySelector('span').innerText);
+        console.log('checked: ' + $('.propBox')[2].checked);
+    }
+    
+    // Add click handler to make entire label clickable
+    setupItemClickHandlers();
+}
+
+// Function to set up click handlers for the item labels
+function setupItemClickHandlers() {
+    $('.item-label').on('click', function(e) {
+        // Don't handle the event if the click was directly on the checkbox
+        // This prevents double-toggling when clicking the checkbox itself
+        if (e.target.type !== 'checkbox') {
+            // Find the checkbox inside this label and toggle it
+            const checkbox = $(this).find('.propBox');
+            checkbox.prop('checked', !checkbox.prop('checked'));
+            
+            // Prevent the default label behavior (which would also toggle the checkbox)
+            e.preventDefault();
+        }
+    });
 }
 
 function writeTextToClipboard(str) {
     return new Promise(function (resolve, reject) {
-        var success = false;
-        function listener(e) {
-            e.clipboardData.setData("text/rich", str);
-            e.preventDefault();
-            success = true;
+        // Remove HTML tags to get plain text
+        const plainText = str.replace(/<[^>]*>/g, '');
+        
+        // Modern clipboard API approach
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(plainText)
+                .then(resolve)
+                .catch(function(err) {
+                    // Fallback to the older execCommand method
+                    fallbackCopyTextToClipboard(str, resolve, reject);
+                });
+        } else {
+            // Fallback for browsers that don't support clipboard API
+            fallbackCopyTextToClipboard(str, resolve, reject);
         }
+    });
+}
 
-        document.addEventListener("copy", listener);
-        document.execCommand("copy");
-        document.removeEventListener("copy", listener);
-        success ? resolve() : reject();
-    })
+function fallbackCopyTextToClipboard(str, resolve, reject) {
+    try {
+        // Create a temporary textarea element
+        const textArea = document.createElement("textarea");
+        // Remove HTML tags to get plain text
+        const plainText = str.replace(/<[^>]*>/g, '');
+        
+        // Set the textarea value and styling
+        textArea.value = plainText;
+        textArea.style.position = "fixed";  // Avoid scrolling to bottom
+        textArea.style.top = "0";
+        textArea.style.left = "0";
+        textArea.style.width = "2em";
+        textArea.style.height = "2em";
+        textArea.style.padding = "0";
+        textArea.style.border = "none";
+        textArea.style.outline = "none";
+        textArea.style.boxShadow = "none";
+        textArea.style.background = "transparent";
+        
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        
+        // Try to copy the text
+        const successful = document.execCommand('copy');
+        
+        // Clean up
+        document.body.removeChild(textArea);
+        
+        if (successful) {
+            resolve();
+        } else {
+            reject(new Error('Unable to copy'));
+        }
+    } catch (err) {
+        reject(err);
+    }
+}
+
+// Function to show a notification to the user
+function showNotification(message, type = 'success') {
+    // Create notification element if it doesn't exist
+    let notification = document.getElementById('notification');
+    if (!notification) {
+        notification = document.createElement('div');
+        notification.id = 'notification';
+        document.body.appendChild(notification);
+    }
+    
+    // Set the notification style based on type
+    notification.className = 'notification ' + type;
+    notification.textContent = message;
+    
+    // Show the notification
+    notification.style.display = 'block';
+    
+    // Hide after 3 seconds
+    setTimeout(() => {
+        notification.style.opacity = '0';
+        setTimeout(() => {
+            notification.style.display = 'none';
+            notification.style.opacity = '1';
+        }, 500);
+    }, 3000);
 }
 
 /* NicEdit - Micro Inline WYSIWYG
