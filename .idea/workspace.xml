@@ -4,14 +4,24 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4429ae5c-548a-4877-8733-a971f6e44774" name="Changes" comment="add docker files" />
+    <list default="true" id="e95fd939-88c9-4946-a027-6fc9bb201637" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="MacroExpansionManager">
-    <option name="directoryName" value="G3CjGh3Z" />
+    <option name="directoryName" value="vOafDLYk" />
   </component>
   <component name="ProjectLevelVcsManager">
     <OptionsSetting value="false" id="Update" />
@@ -20,20 +30,10 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "dart.analysis.tool.window.visible": "false",
-    "go.import.settings.migrated": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
+    "git-widget-placeholder": "funChanges",
     "node.js.selected.package.tslint": "(autodetect)"
   }
 }]]></component>
-  <component name="RubyModuleManagerSettings">
-    <option name="blackListedRootsPaths">
-      <list>
-        <option value="$PROJECT_DIR$" />
-      </list>
-    </option>
-  </component>
   <component name="TaskManager">
     <servers />
   </component>

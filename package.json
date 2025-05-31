@@ -12,6 +12,9 @@
     "docker:stop": "docker stop hunter-report-app && docker rm hunter-report-app",
     "docker:compose:up": "docker-compose up -d",
     "docker:compose:down": "docker-compose down",
+    "docker:hub:build": "docker build -t oldgreg5/hunter-report-glue:latest .",
+    "docker:hub:push": "docker push oldgreg5/hunter-report-glue:latest",
+    "docker:hub:publish": "npm run docker:hub:build --username=oldgreg5 && npm run docker:hub:push --username=oldgreg5",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
