@@ -20,26 +20,27 @@ function combineDescription() {
     //         console.error('Failed to copy to clipboard:', err);
     //         showNotification('Report generated, but copying to clipboard failed.', 'error');
     //     });
+    copyNicEditorContent();
 }
 
 function combineText() {
     var boxNodes = $('.propBox');
     console.log('size: ' + boxNodes.length);
     let gluedText = '';
-    
+
     for (i = 0; i < boxNodes.length; i++) {
         if (boxNodes[i].checked) {
             console.log('Checkbox ' + i + ' is checked');
-            
+
             // Get the item name from the span element
-            let prop = boxNodes[i].parentNode.querySelector('span').getAttribute('data-original-text') || 
+            let prop = boxNodes[i].parentNode.querySelector('span').getAttribute('data-original-text') ||
                        boxNodes[i].parentNode.querySelector('span').innerText;
             console.log('Item name: ' + prop);
-            
+
             // Look up the description in the map
             let val = desciptionPairs.get(prop);
             console.log('Description: ' + val);
-            
+
             // Add to the output text
             gluedText += "<b>";
             gluedText += prop;
@@ -49,7 +50,7 @@ function combineText() {
             gluedText += "<br>";
         }
     }
-    
+
     return gluedText;
 }
 
@@ -64,12 +65,12 @@ async function loadAndParseDescriptionFile() {
     new nicEditor({
         buttonList: ['bold', 'italic', 'underline', 'left', 'center', 'right', 'ol', 'ul', 'fontSize', 'fontFamily']
     }).panelInstance('combinedText');
-    
+
     var fileName = "HunterWyniki.txt";
     const response = await fetch(fileName);
     let txt = await response.text();
     parseDescriptionFile(txt);
-    
+
     // Setup search functionality after items are loaded
     setupSearch();
 }
@@ -77,18 +78,18 @@ async function loadAndParseDescriptionFile() {
 function setupSearch() {
     const searchBox = $('#searchBox');
     const searchClear = $('#searchClear');
-    
+
     // Show/hide clear button based on search content
     searchBox.on('input', function() {
         const searchText = $(this).val().trim();
-        
+
         // Show/hide clear button
         if (searchText.length > 0) {
             searchClear.show();
         } else {
             searchClear.hide();
         }
-        
+
         // Handle multi-line input (list of items)
         if (searchText.includes('\n')) {
             handleMultilineSearch(searchText);
@@ -97,14 +98,14 @@ function setupSearch() {
             filterItems(searchText.toLowerCase());
         }
     });
-    
+
     // Clear search when the × is clicked
     searchClear.on('click', function() {
         searchBox.val('').focus();
         searchClear.hide();
         filterItems('');
     });
-    
+
     // Add keyboard shortcut (Escape key) to clear search
     $(document).on('keydown', function(e) {
         if (e.key === 'Escape' && document.activeElement === searchBox[0]) {
@@ -113,7 +114,7 @@ function setupSearch() {
             filterItems('');
         }
     });
-    
+
     // Handle pasted content
     searchBox.on('paste', function(e) {
         // We'll let the input event handle the actual processing
@@ -125,18 +126,18 @@ function setupSearch() {
             }
         }, 0);
     });
-    
+
     // Hide clear button initially
     searchClear.hide();
-    
+
     // Function to handle multi-line search (list of items)
     function handleMultilineSearch(searchText) {
         // Split the input by new lines
         const items = searchText.split('\n').filter(item => item.trim() !== '');
-        
+
         // Reset all checkboxes
         $('.propBox').prop('checked', false);
-        
+
         // For each item in the list, try to find and mark matching items
         items.forEach(item => {
             const searchTerm = item.trim().toLowerCase();
@@ -144,43 +145,43 @@ function setupSearch() {
                 markMatchingItem(searchTerm);
             }
         });
-        
+
         // Update the search box with the processed items
         searchBox.val(items.join('\n'));
-        
+
         // Show notification
         const matchedCount = $('.propBox:checked').length;
         if (matchedCount > 0) {
             showNotification(`Marked ${matchedCount} item${matchedCount > 1 ? 's' : ''}`, 'success');
         }
     }
-    
+
     // Function to mark an item that matches the search term
     function markMatchingItem(searchTerm) {
         let exactMatches = [];
         let partialMatches = [];
-        
+
         // Find all potential matches
         $('.item-label span').each(function() {
             const span = $(this);
             const originalText = span.attr('data-original-text') || span.text();
             const itemText = originalText.toLowerCase();
-            
+
             // Store original text if not already stored
             if (!span.attr('data-original-text')) {
                 span.attr('data-original-text', originalText);
             }
-            
+
             // Check for exact match
             if (itemText === searchTerm) {
                 exactMatches.push(span.parent());
-            } 
+            }
             // Check for partial match
             else if (itemText.includes(searchTerm)) {
                 partialMatches.push(span.parent());
             }
         });
-        
+
         // If we have exactly one exact match or one partial match when no exact matches exist
         if (exactMatches.length === 1) {
             // We have an unambiguous exact match, mark it
@@ -193,10 +194,10 @@ function setupSearch() {
             checkbox.prop('checked', true);
             return true;
         }
-        
+
         return false;
     }
-    
+
     // Function to filter items based on search term
     function filterItems(searchTerm) {
         if (searchTerm === '') {
@@ -211,43 +212,43 @@ function setupSearch() {
             });
             return;
         }
-        
+
         // First reset all items to visible and remove highlights
         $('.boxes').removeClass('hidden-item');
         $('label').removeClass('hidden-item');
-        
+
         // Track if we have an unambiguous match to auto-select
         let exactMatches = [];
         let partialMatches = [];
-        
+
         // Process each category box
         $('.boxes').each(function() {
             let boxHasMatch = false;
             const categoryBox = $(this);
-            
+
             // Check each label in this category
             categoryBox.find('label').each(function() {
                 const label = $(this);
                 const span = label.find('span');
                 const originalText = span.attr('data-original-text') || span.text();
-                
+
                 // Store original text if not already stored
                 if (!span.attr('data-original-text')) {
                     span.attr('data-original-text', originalText);
                 }
-                
+
                 const labelText = originalText.toLowerCase();
-                
+
                 if (labelText.includes(searchTerm)) {
                     boxHasMatch = true;
-                    
+
                     // Highlight the matching text
                     const regex = new RegExp('(' + escapeRegExp(searchTerm) + ')', 'gi');
                     const highlightedText = originalText.replace(regex, '<span class="highlight">$1</span>');
                     span.html(highlightedText);
-                    
+
                     label.removeClass('hidden-item');
-                    
+
                     // Track exact and partial matches for auto-selection
                     if (labelText === searchTerm) {
                         exactMatches.push(label);
@@ -258,13 +259,13 @@ function setupSearch() {
                     label.addClass('hidden-item');
                 }
             });
-            
+
             // Hide the entire category if it has no matches
             if (!boxHasMatch) {
                 categoryBox.addClass('hidden-item');
             }
         });
-        
+
         // If we have exactly one match, auto-select it
         if (exactMatches.length === 1) {
             // We have an unambiguous exact match, mark it
@@ -276,7 +277,7 @@ function setupSearch() {
             checkbox.prop('checked', true);
         }
     }
-    
+
     // Helper function to escape special regex characters
     function escapeRegExp(string) {
         return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -297,28 +298,28 @@ function parseDescriptionFile(text) {
             // Extract just the item name (before the $ sign)
             keyToAdd = text1[j].split('$')[0];
             valueToAdd = text1[j].split('$')[1];
-            
+
             // Store in the map for report generation
             desciptionPairs.set(keyToAdd, valueToAdd);
-            
+
             // Use a unique ID for each checkbox based on category and item
             const checkboxId = 'box_' + i + '_' + j;
-            
+
             // Only use the item name in the label
             labelToAdd = '<label for="' + checkboxId + '" class="item-label"><input id="' + checkboxId + '" type="checkbox" class="propBox" name="radioGroup"><span>' + keyToAdd + '</span></label>';
-            
+
             $('#type' + i).append(labelToAdd)
         }
         $('#descriptionsTable').append('</div>')
     }
     console.log(">> Pairs size:" + desciptionPairs.size);
-    
+
     // Only log checkbox info if we have checkboxes
     if ($('.propBox').length > 2) {
         console.log("box: " + $('.propBox')[2].parentNode.querySelector('span').innerText);
         console.log('checked: ' + $('.propBox')[2].checked);
     }
-    
+
     // Add click handler to make entire label clickable
     setupItemClickHandlers();
 }
@@ -332,7 +333,7 @@ function setupItemClickHandlers() {
             // Find the checkbox inside this label and toggle it
             const checkbox = $(this).find('.propBox');
             checkbox.prop('checked', !checkbox.prop('checked'));
-            
+
             // Prevent the default label behavior (which would also toggle the checkbox)
             e.preventDefault();
         }
@@ -343,7 +344,7 @@ function writeTextToClipboard(str) {
     return new Promise(function (resolve, reject) {
         // Remove HTML tags to get plain text
         const plainText = str.replace(/<[^>]*>/g, '');
-        
+
         // Modern clipboard API approach
         if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(plainText)
@@ -365,7 +366,7 @@ function fallbackCopyTextToClipboard(str, resolve, reject) {
         const textArea = document.createElement("textarea");
         // Remove HTML tags to get plain text
         const plainText = str.replace(/<[^>]*>/g, '');
-        
+
         // Set the textarea value and styling
         textArea.value = plainText;
         textArea.style.position = "fixed";  // Avoid scrolling to bottom
@@ -378,17 +379,17 @@ function fallbackCopyTextToClipboard(str, resolve, reject) {
         textArea.style.outline = "none";
         textArea.style.boxShadow = "none";
         textArea.style.background = "transparent";
-        
+
         document.body.appendChild(textArea);
         textArea.focus();
         textArea.select();
-        
+
         // Try to copy the text
         const successful = document.execCommand('copy');
-        
+
         // Clean up
         document.body.removeChild(textArea);
-        
+
         if (successful) {
             resolve();
         } else {
@@ -408,14 +409,14 @@ function showNotification(message, type = 'success') {
         notification.id = 'notification';
         document.body.appendChild(notification);
     }
-    
+
     // Set the notification style based on type
     notification.className = 'notification ' + type;
     notification.textContent = message;
-    
+
     // Show the notification
     notification.style.display = 'block';
-    
+
     // Hide after 3 seconds
     setTimeout(() => {
         notification.style.opacity = '0';
@@ -438,30 +439,30 @@ function copyNicEditorContent() {
         // Create a temporary div element with contentEditable to preserve formatting
         const tempDiv = document.createElement('div');
         tempDiv.contentEditable = true;
-        
+
         // Set styles to hide the element but keep it in the DOM flow
         tempDiv.style.position = 'fixed';
         tempDiv.style.left = '-9999px';
         tempDiv.style.top = '0';
-        
+
         // Set the formatted content from nicEditor
         tempDiv.innerHTML = nicFrame.innerHTML;
         document.body.appendChild(tempDiv);
-        
+
         // Select the content
         const range = document.createRange();
         range.selectNodeContents(tempDiv);
-        
+
         const selection = window.getSelection();
         selection.removeAllRanges();
         selection.addRange(range);
-        
+
         // Execute copy command
         const successful = document.execCommand('copy');
-        
+
         // Clean up
         document.body.removeChild(tempDiv);
-        
+
         // Show notification
         if (successful) {
             showNotification('Content copied to clipboard!');

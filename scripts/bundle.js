@@ -10378,6 +10378,15 @@ function combineDescription() {
     writeToNicEdit(textHtml);
     showNotification('Report generated');
     // Copy the text to clipboard
+    // writeTextToClipboard(textHtml)
+    //     .then(() => {
+    //         // Show a success notification
+    //         showNotification('Report generated and copied to clipboard!');
+    //     })
+    //     .catch(err => {
+    //         console.error('Failed to copy to clipboard:', err);
+    //         showNotification('Report generated, but copying to clipboard failed.', 'error');
+    //     });
     copyNicEditorContent();
 }
 

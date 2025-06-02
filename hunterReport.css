@@ -36,19 +36,6 @@ header {
   gap: 1.5rem;
 }
 
-.nav-link {
-  color: white;
-  text-decoration: none;
-  font-weight: 600;
-  padding: 0.3rem 0.8rem;
-  border-radius: 4px;
-  transition: background-color 0.3s;
-}
-
-.nav-link:hover {
-  background-color: rgba(255, 255, 255, 0.2);
-}
-
 .boxes-table {
   display: flex;
   flex-wrap: wrap;
