@@ -2,23 +2,24 @@ var $ = require('jquery');
 
 window.combineDescription = combineDescription;
 window.loadDescriptionFileHelper = loadAndParseDescriptionFile;
+window.copyNicEditorContent = copyNicEditorContent;
 
 var desciptionPairs = new Map();
 
 function combineDescription() {
     let textHtml = combineText();
     writeToNicEdit(textHtml);
-    
+    showNotification('Report generated');
     // Copy the text to clipboard
-    writeTextToClipboard(textHtml)
-        .then(() => {
-            // Show a success notification
-            showNotification('Report generated and copied to clipboard!');
-        })
-        .catch(err => {
-            console.error('Failed to copy to clipboard:', err);
-            showNotification('Report generated, but copying to clipboard failed.', 'error');
-        });
+    // writeTextToClipboard(textHtml)
+    //     .then(() => {
+    //         // Show a success notification
+    //         showNotification('Report generated and copied to clipboard!');
+    //     })
+    //     .catch(err => {
+    //         console.error('Failed to copy to clipboard:', err);
+    //         showNotification('Report generated, but copying to clipboard failed.', 'error');
+    //     });
 }
 
 function combineText() {
@@ -423,6 +424,54 @@ function showNotification(message, type = 'success') {
             notification.style.opacity = '1';
         }, 500);
     }, 3000);
+}
+
+function copyNicEditorContent() {
+    try {
+        // Find the nicEditor iframe content
+        const nicFrame = document.querySelector('.nicEdit-main');
+        if (!nicFrame) {
+            showNotification('Editor content not found', 'error');
+            return;
+        }
+
+        // Create a temporary div element with contentEditable to preserve formatting
+        const tempDiv = document.createElement('div');
+        tempDiv.contentEditable = true;
+        
+        // Set styles to hide the element but keep it in the DOM flow
+        tempDiv.style.position = 'fixed';
+        tempDiv.style.left = '-9999px';
+        tempDiv.style.top = '0';
+        
+        // Set the formatted content from nicEditor
+        tempDiv.innerHTML = nicFrame.innerHTML;
+        document.body.appendChild(tempDiv);
+        
+        // Select the content
+        const range = document.createRange();
+        range.selectNodeContents(tempDiv);
+        
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+        
+        // Execute copy command
+        const successful = document.execCommand('copy');
+        
+        // Clean up
+        document.body.removeChild(tempDiv);
+        
+        // Show notification
+        if (successful) {
+            showNotification('Content copied to clipboard!');
+        } else {
+            showNotification('Failed to copy to clipboard', 'error');
+        }
+    } catch (err) {
+        console.error('Copy error:', err);
+        showNotification('Error copying to clipboard: ' + err.message, 'error');
+    }
 }
 
 /* NicEdit - Micro Inline WYSIWYG

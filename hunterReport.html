@@ -17,26 +17,28 @@
 <body onload="loadDescriptionFileHelper()">
   <main>
     <h1>Hunter Report Generator</h1>
-    
+
     <div class="layout-container">
       <div class="left-column">
         <div class="search-container">
           <textarea id="searchBox" placeholder="Search items... (Paste list here)" class="search-input"></textarea>
           <span class="search-clear" id="searchClear">×</span>
         </div>
-        
-        <button id="ctaCombineText" type="button" name="button" onclick="combineDescription()">Generate & Copy</button>
-        
+
+        <div class="button-group">
+          <button id="ctaCombineText" type="button" name="button" onclick="combineDescription()">Generate</button>
+        </div>
+
         <div class="textarea-container">
           <textarea id="combinedText" placeholder="Your generated report will appear here..."></textarea>
         </div>
-        
+
         <div id="about" class="about-section">
           <h2>About Hunter Report Generator</h2>
           <p>This tool helps you quickly generate reports by selecting items from different categories.</p>
         </div>
       </div>
-      
+
       <div class="right-column">
         <div id="descriptionsTable" class="boxes-table">
           <!-- Dynamic content will be loaded here -->
@@ -44,11 +46,11 @@
       </div>
     </div>
   </main>
-  
+
   <footer>
     <p>&copy; 2023 Hunter Report Generator</p>
   </footer>
-  
+
   <!-- <script data-main="scripts/hunterReport" src="scripts/require.js"></script> -->
   <script src="./scripts/bundle.js"></script>
   <!-- <script src="htmlRouter.js"></script> -->

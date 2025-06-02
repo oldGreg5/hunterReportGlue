@@ -263,27 +263,35 @@ input[type=checkbox] {
   line-height: 1.4; /* Set line height for readability */
 }
 
-#ctaCombineText {
-  background-color: #2e7d32;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 0.5rem 1rem;
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.3s;
+.button-group {
+  display: flex;
+  gap: 10px;
+  width: 100%;
   margin: 0.8rem 0;
-  display: block;
-  width: 450px;
+}
+
+#ctaCombineText {
   position: relative;
   overflow: hidden;
-  box-sizing: border-box;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  background-color: #2e7d32;
+  color: white;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  flex: 1;
 }
 
 #ctaCombineText:hover {
   background-color: #1b5e20;
-  animation: pulse 1s infinite;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 #ctaCombineText:after {
@@ -418,11 +426,11 @@ input[type=checkbox]:checked + span {
     flex-direction: column;
     align-items: center;
   }
-  
+
   .boxes {
     width: 90%;
   }
-  
+
   #combinedText {
     width: 90%;
   }
@@ -433,17 +441,17 @@ input[type=checkbox]:checked + span {
     flex-direction: column;
     gap: 1rem;
   }
-  
+
   .left-column, .right-column {
     max-width: none;
     width: 100%;
     margin: 0;
   }
-  
+
   #ctaCombineText {
     align-self: center;
   }
-  
+
   .search-container {
     max-width: none;
   }
