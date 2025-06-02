@@ -10509,6 +10509,8 @@ function combineDescription() {
     //         showNotification('Report generated, but copying to clipboard failed.', 'error');
     //     });
     copyNicEditorContent();
+    // Display a random proverb
+    displayRandomProverb();
 }
 
 function combineText() {
@@ -10560,10 +10562,7 @@ async function loadAndParseDescriptionFile() {
     parseDescriptionFile(txt);
 
     // Setup search functionality after items are loaded
-    setupSearch();
-    
-    // Display a random proverb
-    displayRandomProverb();
+    setupSearch();    
 }
 
 function setupSearch() {
