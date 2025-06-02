@@ -4,6 +4,127 @@ window.combineDescription = combineDescription;
 window.loadDescriptionFileHelper = loadAndParseDescriptionFile;
 window.copyNicEditorContent = copyNicEditorContent;
 
+// Array of Chinese proverbs with translations
+const chineseProverbs = [
+    "千里之行，始於足下 - A journey of a thousand miles begins with a single step.",
+    "三思而后行 - Think three times before you act.",
+    "水滴石穿 - Dripping water penetrates the stone.",
+    "有志者事竟成 - Where there's a will, there's a way.",
+    "一言既出，驷马难追 - Once a word is spoken, even four horses cannot catch it.",
+    "学而不思则罔，思而不学则殆 - Learning without thought is labor lost; thought without learning is perilous.",
+    "失败乃成功之母 - Failure is the mother of success.",
+    "机不可失，时不再来 - Opportunity knocks but once.",
+    "己所不欲，勿施于人 - Do not do to others what you do not want done to yourself.",
+    "不入虎穴，焉得虎子 - You can't catch tiger cubs without entering the tiger's den.",
+    "前事不忘，后事之师 - Past experience, if not forgotten, is a guide for the future.",
+    "良药苦口 - Good medicine tastes bitter.",
+    "知己知彼，百战不殆 - Know yourself and your enemy, and you will never be defeated.",
+    "远水救不了近火 - Distant water cannot put out a nearby fire.",
+    "画蛇添足 - Drawing legs on a snake (unnecessary additions).",
+    "塞翁失马，焉知非福 - A blessing in disguise.",
+    "风水轮流转 - Fortunes turn like a wheel.",
+    "一叶障目，不见泰山 - A leaf before your eyes blocks the view of Mount Tai.",
+    "百闻不如一见 - Seeing once is better than hearing a hundred times.",
+    "授人以鱼不如授人以渔 - Give a man a fish and you feed him for a day; teach him to fish and you feed him for a lifetime.",
+    "瓜熟蒂落 - When the melon is ripe, it falls off the vine (things happen in their own time).",
+    "人无完人 - Nobody is perfect.",
+    "活到老，学到老 - Live till old, learn till old.",
+    "种瓜得瓜，种豆得豆 - You reap what you sow.",
+    "冰冻三尺，非一日之寒 - It takes more than one cold day for a river to freeze three feet deep.",
+    "山重水复疑无路，柳暗花明又一村 - Just when you think there's no way forward, you find a new path.",
+    "金玉其外，败絮其中 - Beautiful on the outside, rotten on the inside.",
+    "不经一事，不长一智 - Experience is the mother of wisdom.",
+    "无风不起浪 - There's no smoke without fire.",
+    "害人之心不可有，防人之心不可无 - Don't harbor thoughts of harming others, but be on guard against those who might harm you.",
+    "一朝被蛇咬，十年怕草绳 - Once bitten by a snake, afraid of rope for ten years.",
+    "愚公移山 - The foolish old man who moved mountains (perseverance).",
+    "近朱者赤，近墨者黑 - He who stays near vermilion gets stained red; he who stays near ink gets stained black.",
+    "口是心非 - To say one thing but mean another.",
+    "狡兔三窟 - A crafty rabbit has three burrows (always have a backup plan).",
+    "人心齐，泰山移 - When people work with one heart, they can move Mount Tai.",
+    "一失足成千古恨 - One misstep can lead to eternal regret.",
+    "隔岸观火 - Watch a fire from the opposite bank (observe from a safe distance).",
+    "入乡随俗 - When in Rome, do as the Romans do.",
+    "坐井观天 - Sitting in a well and looking at the sky (limited perspective).",
+    "小洞不补，大洞吃苦 - If small holes aren't fixed, bigger ones will cause trouble.",
+    "树大招风 - A tall tree catches the wind (prominence attracts criticism).",
+    "祸从口出 - Trouble comes out of the mouth.",
+    "一箭双雕 - Kill two birds with one arrow.",
+    "千金难买后悔药 - No amount of money can buy medicine for regret.",
+    "人为财死，鸟为食亡 - People die for wealth as birds die for food.",
+    "宁为玉碎，不为瓦全 - Better to be a broken piece of jade than an intact tile.",
+    "路遥知马力，日久见人心 - A long journey tests a horse's strength; a long time reveals a person's heart.",
+    "一鼓作气，再而衰，三而竭 - The first attack is the most spirited; the second less so; by the third, strength is spent.",
+    "纸上谈兵 - Discussing warfare on paper (armchair strategist).",
+    "风声鹤唳，草木皆兵 - The wind rustling and crane calling sound like soldiers (extreme nervousness).",
+    "树倒猢狲散 - When the tree falls, the monkeys scatter (fair-weather friends).",
+    "覆水难收 - Spilled water is hard to recover.",
+    "画龙点睛 - Add the finishing touch.",
+    "杀鸡儆猴 - Kill the chicken to scare the monkey (make an example of someone).",
+    "井底之蛙 - A frog at the bottom of a well (limited worldview).",
+    "老马识途 - An old horse knows the way.",
+    "姜还是老的辣 - Old ginger is spicier (the old are more experienced).",
+    "一分耕耘，一分收获 - You reap what you sow.",
+    "骑虎难下 - Riding a tiger is hard to dismount (difficult to stop halfway).",
+    "亡羊补牢，未为晚也 - It's never too late to mend the fold after the sheep are lost.",
+    "打草惊蛇 - Beat the grass to startle the snake (alert the enemy).",
+    "一石二鸟 - Kill two birds with one stone.",
+    "小心驶得万年船 - Caution will keep a ship intact for a thousand years.",
+    "不到黄河心不死 - Won't give up until reaching the Yellow River (stubbornness).",
+    "守株待兔 - Wait by a tree stump for a rabbit (rely on luck).",
+    "鱼与熊掌不可兼得 - You can't have both fish and bear's paw (can't have everything).",
+    "船到桥头自然直 - When the boat reaches the bridge, it will naturally straighten (things work out).",
+    "欲速则不达 - Haste makes waste.",
+    "风雨同舟 - In the same boat through wind and rain (face hardships together).",
+    "百足之虫，死而不僵 - A centipede dies but doesn't fall over (resilience).",
+    "人不可貌相，海水不可斗量 - Don't judge a person by appearance, just as you can't measure the sea with a cup.",
+    "一寸光阴一寸金，寸金难买寸光阴 - An inch of time is an inch of gold, but an inch of gold cannot buy an inch of time.",
+    "江山易改，本性难移 - Mountains and rivers may change, but one's nature remains the same.",
+    "吃一堑，长一智 - Learn from your mistakes.",
+    "人多嘴杂 - Many people, many mouths (too many opinions).",
+    "天下没有免费的午餐 - There's no such thing as a free lunch.",
+    "人生不如意事十之八九 - Eight or nine out of ten things in life don't go as wished.",
+    "旁观者清 - The bystander sees most of the game.",
+    "兵来将挡，水来土掩 - Meet soldiers with generals, meet flood with dams (be prepared).",
+    "一年之计在于春 - The plan for the year lies in spring.",
+    "笨鸟先飞 - The clumsy bird must start flying early (slower people must work harder).",
+    "枪打出头鸟 - The gun shoots the bird that sticks its head out (don't stand out).",
+    "天有不测风云，人有旦夕祸福 - The weather changes unpredictably, and fortune can turn in an instant.",
+    "留得青山在，不怕没柴烧 - As long as the green mountains are there, one need not worry about firewood.",
+    "强龙不压地头蛇 - Even a mighty dragon cannot crush a local snake.",
+    "害人终害己 - He who harms others harms himself.",
+    "三个臭皮匠，胜过诸葛亮 - Three cobblers with their wits combined equal Zhuge Liang (the wisdom of the masses).",
+    "心急吃不了热豆腐 - Haste makes waste (literally: impatience won't let you eat hot tofu).",
+    "饱汉不知饿汉饥 - The well-fed man doesn't understand the hunger of the starving.",
+    "人往高处走，水往低处流 - People seek to climb high, water flows downward (natural tendencies).",
+    "莫欺少年穷 - Don't look down on the poor youth.",
+    "大智若愚 - The truly wise appear foolish.",
+    "宁可信其有，不可信其无 - Better to believe it exists than to believe it doesn't.",
+    "人生如梦 - Life is like a dream.",
+    "时来运转 - Fortune comes to those who wait.",
+    "天作孽，犹可违，自作孽，不可活 - You may escape natural disasters, but you cannot escape self-inflicted ones.",
+    "忍一时风平浪静，退一步海阔天空 - Forbear for the moment and the winds will calm; take a step back for a broader view.",
+    "福无双至，祸不单行 - Good fortune doesn't come twice, but misfortunes never come alone.",
+    "爱屋及乌 - Love the house and its crow (extend love to a person's associates).",
+    "聪明反被聪明误 - Too clever by half."
+];
+
+// Function to display a random proverb
+function displayRandomProverb() {
+    console.log("Displaying random proverb...");
+    const randomIndex = Math.floor(Math.random() * chineseProverbs.length);
+    const randomProverb = chineseProverbs[randomIndex];
+    console.log("Selected proverb:", randomProverb);
+    
+    const proverbElement = document.querySelector('#about p');
+    if (proverbElement) {
+        console.log("Found proverb element, updating content");
+        proverbElement.textContent = randomProverb;
+    } else {
+        console.error("Could not find proverb element with selector '#about p'");
+    }
+}
+
 var desciptionPairs = new Map();
 
 function combineDescription() {
@@ -73,6 +194,9 @@ async function loadAndParseDescriptionFile() {
 
     // Setup search functionality after items are loaded
     setupSearch();
+    
+    // Display a random proverb
+    displayRandomProverb();
 }
 
 function setupSearch() {
