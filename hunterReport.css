@@ -226,11 +226,12 @@ input[type=checkbox] {
 
 .textarea-container {
   width: 100%;
-  margin: 0.8rem 0 0 0;
+  margin: 0.8rem 0 5px 0; /* Add 5px margin at the bottom */
   position: relative;
-  height: 250px; /* Fixed height */
-  max-height: calc(100% - 120px); /* Ensure it doesn't overflow the left column */
-  overflow-y: auto; /* Enable vertical scrolling instead of hidden */
+  height: calc(100vh - 320px); /* Further reduced height to avoid scrolling */
+  flex: 1; /* Allow it to grow and take available space */
+  display: flex;
+  flex-direction: column;
 }
 
 #combinedText {
@@ -248,6 +249,7 @@ input[type=checkbox] {
   font-family: inherit; /* Ensure consistent font */
   font-size: 0.9rem; /* Set appropriate font size */
   line-height: 1.4; /* Set line height for readability */
+  flex: 1; /* Allow it to grow and take available space */
 }
 
 .button-group {
@@ -402,10 +404,29 @@ input[type=checkbox]:checked + span {
 /* Compact layout for nicEditor */
 .nicEdit-main {
   min-height: 150px !important;
+  height: calc(100vh - 340px) !important; /* Further reduced height by 20px */
+}
+
+.nicEdit-panelContain {
+  border-width: 0 0 1px 0 !important; /* Only show bottom border */
 }
 
 .nicEdit-panel {
   padding: 0 !important;
+}
+
+/* Make the nicEditor container take up all available space */
+div.nicEdit-main {
+  width: 100% !important;
+}
+
+iframe {
+  height: 100% !important;
+}
+
+/* Make sure the editor container takes full height */
+.nicEdit-container {
+  height: 100% !important;
 }
 
 @media (max-width: 768px) {
