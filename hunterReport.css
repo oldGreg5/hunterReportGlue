@@ -405,6 +405,32 @@ input[type=checkbox]:checked + span {
 .nicEdit-main {
   min-height: 150px !important;
   height: calc(100vh - 340px) !important; /* Further reduced height by 20px */
+  overflow-y: auto !important; /* Enable scrolling only when needed */
+  overflow-x: hidden !important; /* Hide horizontal scrolling */
+}
+
+/* Style the scrollbar for the nicEditor */
+.nicEdit-main::-webkit-scrollbar {
+  width: 8px;
+}
+
+.nicEdit-main::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.nicEdit-main::-webkit-scrollbar-thumb {
+  background: #c8e6c9;
+  border-radius: 4px;
+}
+
+.nicEdit-main::-webkit-scrollbar-thumb:hover {
+  background: #2e7d32;
+}
+
+/* Ensure iframe content can scroll */
+.nicEdit-main iframe {
+  overflow-y: auto !important;
 }
 
 .nicEdit-panelContain {

@@ -69,6 +69,7 @@ async function loadAndParseDescriptionFile() {
                 // Set the height dynamically
                 editorElem.style.height = (window.innerHeight - 340) + 'px';
                 editorElem.style.maxHeight = 'none';
+                editorElem.style.overflowY = 'auto';
             }
         }
     });
@@ -87,6 +88,14 @@ async function loadAndParseDescriptionFile() {
         if (editorElem) {
             editorElem.style.height = (window.innerHeight - 340) + 'px';
             editorElem.style.maxHeight = 'none';
+            editorElem.style.overflowY = 'auto';
+            
+            // Also ensure the iframe content can scroll
+            const iframe = editorElem.querySelector('iframe');
+            if (iframe && iframe.contentDocument && iframe.contentDocument.body) {
+                iframe.contentDocument.body.style.overflowY = 'auto';
+            }
+            
             console.log('Adjusted editor height to:', (window.innerHeight - 340) + 'px');
         }
     }, 500);
