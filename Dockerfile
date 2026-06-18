@@ -1,58 +1,49 @@
-FROM node:18-alpine AS build
+# --- Build Stage: Frontend (WASM) ---
+FROM rust:1.80-slim AS frontend-builder
 
-# Set the working directory
+# Install wasm-pack
+RUN apt-get update && apt-get install -y curl pkg-config libssl-dev && \
+    curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+
 WORKDIR /usr/src/app
-
-# Copy package.json and package-lock.json
-COPY package*.json ./
-
-# Install dependencies
-RUN npm install
-
-# Copy the application files
 COPY . .
 
-# Install browserify globally for bundle generation
-RUN npm install -g browserify
+WORKDIR /usr/src/app/frontend
+RUN wasm-pack build --target web --out-dir ../static/hunterReport/pkg
 
-# Generate the bundle.js file
-RUN mkdir -p scripts && browserify scripts/hunterReport.js -o scripts/bundle.js
+# --- Build Stage: Backend ---
+FROM rust:1.80-slim AS backend-builder
 
-# Use a smaller image for the final build
-FROM node:18-alpine
+WORKDIR /usr/src/app
+COPY . .
+# Copy the built frontend from the previous stage
+COPY --from=frontend-builder /usr/src/app/static/hunterReport/pkg ./static/hunterReport/pkg
 
-# Create a non-root user
-RUN addgroup -S nodeapp && \
-    adduser -S -G nodeapp nodeapp
+RUN cargo build --release --bin hunter_report_backend
+
+# --- Final Runtime Stage ---
+FROM debian:bookworm-slim
+
+# Install necessary runtime libraries (for docx-rs or other dependencies if needed)
+RUN apt-get update && apt-get install -y ca-certificates && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /usr/src/app
 
-# Copy only necessary files from the build stage
-COPY --from=build /usr/src/app/package*.json ./
-COPY --from=build /usr/src/app/hunterReport.html ./
-COPY --from=build /usr/src/app/hunterReport.css ./
-COPY --from=build /usr/src/app/testNode.js ./
-COPY --from=build /usr/src/app/scripts/bundle.js ./scripts/
-COPY --from=build /usr/src/app/data ./data/
+# Create a non-root user
+RUN groupadd -r nodeapp && useradd -r -g nodeapp nodeapp
 
-# Create necessary directories
-RUN mkdir -p scripts data
-
-# Install only production dependencies
-RUN npm ci --only=production
+# Copy binary and static assets
+COPY --from=backend-builder /usr/src/app/target/release/hunter_report_backend ./hunter_report_backend
+COPY --from=backend-builder /usr/src/app/static ./static
+COPY --from=backend-builder /usr/src/app/data ./data
 
 # Set proper permissions
 RUN chown -R nodeapp:nodeapp /usr/src/app
 
-# Use the non-root user
 USER nodeapp
 
-# Expose the port
-EXPOSE 8089
-
-# Health check
-HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://localhost:8089/hunterReport || exit 1
+# Expose the port used in backend/src/main.rs (8081)
+EXPOSE 8081
 
 # Start the application
-CMD ["node", "testNode.js"]
+CMD ["./hunter_report_backend"]

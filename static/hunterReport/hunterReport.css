@@ -224,98 +224,6 @@ input[type=checkbox] {
   overflow: hidden; /* Prevent overflow from causing page scroll */
 }
 
-.textarea-container {
-  width: 100%;
-  margin: 0.8rem 0 5px 0; /* Add 5px margin at the bottom */
-  position: relative;
-  height: calc(100vh - 320px); /* Further reduced height to avoid scrolling */
-  flex: 1; /* Allow it to grow and take available space */
-  display: flex;
-  flex-direction: column;
-}
-
-#combinedText {
-  width: 100%;
-  max-width: none;
-  height: 100%; /* Fill the container height */
-  margin: 0;
-  text-align: left;
-  border: 1px solid #c8e6c9;
-  border-radius: 8px;
-  padding: 0.5rem;
-  background-color: rgba(255, 255, 255, 0.9);
-  overflow-y: auto; /* Enable vertical scrolling */
-  resize: none; /* Disable resizing since we have fixed height */
-  font-family: inherit; /* Ensure consistent font */
-  font-size: 0.9rem; /* Set appropriate font size */
-  line-height: 1.4; /* Set line height for readability */
-  flex: 1; /* Allow it to grow and take available space */
-}
-
-.button-group {
-  display: flex;
-  gap: 10px;
-  width: 100%;
-  margin: 0.8rem 0;
-}
-
-#ctaCombineText {
-  position: relative;
-  overflow: hidden;
-  border: none;
-  border-radius: 4px;
-  padding: 8px 16px;
-  background-color: #2e7d32;
-  color: white;
-  font-weight: 600;
-  font-size: 0.9rem;
-  cursor: pointer;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  flex: 1;
-}
-
-#ctaCombineText:hover {
-  background-color: #1b5e20;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-#ctaCombineText:after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 5px;
-  height: 5px;
-  background: rgba(255, 255, 255, 0.5);
-  opacity: 0;
-  border-radius: 100%;
-  transform: scale(1, 1) translate(-50%);
-  transform-origin: 50% 50%;
-}
-
-#ctaCombineText:focus:not(:active)::after {
-  animation: ripple 1s ease-out;
-}
-
-@keyframes ripple {
-  0% {
-    transform: scale(0, 0);
-    opacity: 1;
-  }
-  20% {
-    transform: scale(25, 25);
-    opacity: 0.2;
-  }
-  100% {
-    opacity: 0;
-    transform: scale(40, 40);
-  }
-}
-
 h1 {
   color: #1b5e20;
   margin: 0.8rem 0 0.5rem;
@@ -401,58 +309,148 @@ input[type=checkbox]:checked + span {
   transition: all 0.3s ease;
 }
 
-/* Compact layout for nicEditor */
-.nicEdit-main {
-  min-height: 150px !important;
-  height: calc(100vh - 340px) !important; /* Further reduced height by 20px */
-  overflow-y: auto !important; /* Enable scrolling only when needed */
-  overflow-x: hidden !important; /* Hide horizontal scrolling */
+ .wizard {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
-/* Style the scrollbar for the nicEditor */
-.nicEdit-main::-webkit-scrollbar {
-  width: 8px;
+.wizard-header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 0;
 }
 
-.nicEdit-main::-webkit-scrollbar-track {
-  background: #f1f1f1;
+.wizard-progress {
+  font-size: 0.85rem;
+  color: #2c3e2c;
+}
+
+.wizard-title {
+  font-weight: 600;
+  color: #1b5e20;
+}
+
+.wizard-step {
+  display: none;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 8px;
+  border: 1px solid #c8e6c9;
+  padding: 1rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.wizard-step--active {
+  display: block;
+}
+
+.wizard-step h2 {
+  margin: 0 0 0.8rem 0;
+  color: #2e7d32;
+  font-size: 1.1rem;
+}
+
+.wizard-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 0.8rem;
+}
+
+.wizard-field label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: default;
+}
+
+.wizard-field input[type="text"],
+.wizard-field input[type="date"] {
+  border: 1px solid #c8e6c9;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 0.95rem;
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.wizard-textarea {
+  width: 100%;
+  border: 1px solid #c8e6c9;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 0.95rem;
+  background-color: rgba(255, 255, 255, 0.9);
+  resize: vertical;
+}
+
+.wizard-checkboxes {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.wizard-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 6px;
+}
+
+.wizard-checkbox:hover {
+  background-color: #e8f5e9;
+}
+
+.wizard-selected {
+  margin-top: 10px;
+  font-size: 0.85rem;
+  color: #2c3e2c;
+}
+
+.wizard-nav {
+  display: flex;
+  gap: 10px;
+  padding: 12px 0 0 0;
+}
+
+.wizard-button {
+  position: relative;
+  overflow: hidden;
+  border: none;
   border-radius: 4px;
+  padding: 10px 16px;
+  background-color: #2e7d32;
+  color: white;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.nicEdit-main::-webkit-scrollbar-thumb {
-  background: #c8e6c9;
-  border-radius: 4px;
+.wizard-button:hover {
+  background-color: #1b5e20;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.nicEdit-main::-webkit-scrollbar-thumb:hover {
-  background: #2e7d32;
+.wizard-button-secondary {
+  background-color: #607d8b;
 }
 
-/* Ensure iframe content can scroll */
-.nicEdit-main iframe {
-  overflow-y: auto !important;
+.wizard-button-secondary:hover {
+  background-color: #455a64;
 }
 
-.nicEdit-panelContain {
-  border-width: 0 0 1px 0 !important; /* Only show bottom border */
-}
-
-.nicEdit-panel {
-  padding: 0 !important;
-}
-
-/* Make the nicEditor container take up all available space */
-div.nicEdit-main {
-  width: 100% !important;
-}
-
-iframe {
-  height: 100% !important;
-}
-
-/* Make sure the editor container takes full height */
-.nicEdit-container {
-  height: 100% !important;
+.wizard-step7-layout {
+  margin-top: 0.8rem;
+  height: calc(100vh - 340px);
 }
 
 @media (max-width: 768px) {
@@ -462,10 +460,6 @@ iframe {
   }
 
   .boxes {
-    width: 90%;
-  }
-
-  #combinedText {
     width: 90%;
   }
 }
@@ -480,10 +474,6 @@ iframe {
     max-width: none;
     width: 100%;
     margin: 0;
-  }
-
-  #ctaCombineText {
-    align-self: center;
   }
 
   .search-container {
@@ -518,3 +508,4 @@ iframe {
   color: white;
   border-left: 5px solid #B71C1C;
 }
+

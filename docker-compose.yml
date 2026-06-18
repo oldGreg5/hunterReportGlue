@@ -1,30 +1,10 @@
-version: '3.8'
-
 services:
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      platforms:
-        - linux/amd64
-    image: oldgreg5/hunter-report-glue:latest
-    container_name: hunter-report-glue
-    restart: unless-stopped
+    build: .
     ports:
-      - '8089:8089'
+      - "8081:8081"
     volumes:
-      - ./data:/usr/src/app/data
+      - ./data/HunterWyniki.txt:/usr/src/app/static/HunterWyniki.txt
+    restart: always
     environment:
-      - NODE_ENV=production
-    networks:
-      - hunter-network
-    healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8089/hunterReport"]
-      interval: 30s
-      timeout: 5s
-      retries: 3
-      start_period: 5s
-
-networks:
-  hunter-network:
-    driver: bridge
+      - RUST_LOG=info
