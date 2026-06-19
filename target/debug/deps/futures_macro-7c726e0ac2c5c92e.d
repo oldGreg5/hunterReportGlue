@@ -1,0 +1,9 @@
+/Users/januszjanus/git/hunterReport/target/debug/deps/futures_macro-7c726e0ac2c5c92e.d: /Users/januszjanus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/futures-macro-0.3.31/src/lib.rs /Users/januszjanus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/futures-macro-0.3.31/src/executor.rs /Users/januszjanus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/futures-macro-0.3.31/src/join.rs /Users/januszjanus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/futures-macro-0.3.31/src/select.rs /Users/januszjanus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/futures-macro-0.3.31/src/stream_select.rs
+
+/Users/januszjanus/git/hunterReport/target/debug/deps/libfutures_macro-7c726e0ac2c5c92e.dylib: /Users/januszjanus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/futures-macro-0.3.31/src/lib.rs /Users/januszjanus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/futures-macro-0.3.31/src/executor.rs /Users/januszjanus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/futures-macro-0.3.31/src/join.rs /Users/januszjanus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/futures-macro-0.3.31/src/select.rs /Users/januszjanus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/futures-macro-0.3.31/src/stream_select.rs
+
+/Users/januszjanus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/futures-macro-0.3.31/src/lib.rs:
+/Users/januszjanus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/futures-macro-0.3.31/src/executor.rs:
+/Users/januszjanus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/futures-macro-0.3.31/src/join.rs:
+/Users/januszjanus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/futures-macro-0.3.31/src/select.rs:
+/Users/januszjanus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/futures-macro-0.3.31/src/stream_select.rs:

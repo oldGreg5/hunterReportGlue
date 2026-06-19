@@ -1,15 +1,10 @@
-version: '1.1'
 services:
   app:
     build: .
     ports:
-      - '8089:8089'
-  ngrok:
-    image: wernight/ngrok
-    ports:
-      - '8089:8089'
+      - "8089:8081"
+    volumes:
+      - ./data/HunterWyniki.txt:/usr/src/app/static/HunterWyniki.txt
+    restart: always
     environment:
-      - NGROK_PORT=8089
-      - NGROK_REGION=eu
-      - NGROK_AUTH=2UcEzMCN4yh1KSOCbW1yzPuqJBI_3ejEmTR29dLqdYcjAZFbv
-      - NGROK_PROTOCOL=http
+      - RUST_LOG=info

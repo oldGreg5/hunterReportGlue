@@ -1,0 +1,208 @@
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"AutoImportSettings\">\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\n  </component>\n  <component name=\"ChangeListManager\">\n    <list default=\"true\" id=\"4429ae5c-548a-4877-8733-a971f6e44774\" name=\"Changes\" comment=\"add docker files\" />\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\n  </component>\n  <component name=\"MacroExpansionManager\">\n    <option name=\"directoryName\" value=\"G3CjGh3Z\" />\n  </component>\n  <component name=\"ProjectLevelVcsManager\">\n    <OptionsSetting value=\"false\" id=\"Update\" />\n    <ConfirmationsSetting value=\"1\" id=\"Add\" />\n  </component>\n  <component name=\"PropertiesComponent\"><![CDATA[{\n  \"keyToString\": {\n    \"dart.analysis.tool.window.visible\": \"false\",\n    \"go.import.settings.migrated\": \"true\",\n    \"node.js.detected.package.eslint\": \"true\",\n    \"node.js.detected.package.tslint\": \"true\",\n    \"node.js.selected.package.eslint\": \"(autodetect)\",\n    \"node.js.selected.package.tslint\": \"(autodetect)\"\n  }\n}]]></component>\n  <component name=\"RubyModuleManagerSettings\">\n    <option name=\"blackListedRootsPaths\">\n      <list>\n        <option value=\"$PROJECT_DIR$\" />\n      </list>\n    </option>\n  </component>\n  <component name=\"TaskManager\">\n    <servers />\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 39d979773d5cff376044f544823dc0af7e01805a)
++++ b/.idea/workspace.xml	(date 1748612100236)
+@@ -4,27 +4,68 @@
+     <option name="autoReloadType" value="SELECTIVE" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="4429ae5c-548a-4877-8733-a971f6e44774" name="Changes" comment="add docker files" />
++    <list default="true" id="4429ae5c-548a-4877-8733-a971f6e44774" name="Changes" comment="add docker files">
++      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
++    </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+     <option name="LAST_RESOLUTION" value="IGNORE" />
+   </component>
++  <component name="Git.Settings">
++    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
++  </component>
++  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
++  "lastFilter": {
++    "state": "OPEN",
++    "assignee": "oldGreg5"
++  }
++}]]></component>
++  <component name="GithubPullRequestsUISettings"><![CDATA[{
++  "selectedUrlAndAccountId": {
++    "url": "https://github.com/oldGreg5/hunterReportGlue.git",
++    "accountId": "c677075a-dbe6-4f64-9662-19db2a972449"
++  }
++}]]></component>
+   <component name="MacroExpansionManager">
+     <option name="directoryName" value="G3CjGh3Z" />
+   </component>
++  <component name="ProjectColorInfo"><![CDATA[{
++  "associatedIndex": 0
++}]]></component>
++  <component name="ProjectId" id="2xoiFhipa1pPCcyVdhPrfDtdE0U" />
+   <component name="ProjectLevelVcsManager">
+     <OptionsSetting value="false" id="Update" />
+     <ConfirmationsSetting value="1" id="Add" />
++  </component>
++  <component name="ProjectViewState">
++    <option name="autoscrollFromSource" value="true" />
++    <option name="autoscrollToSource" value="true" />
++    <option name="hideEmptyMiddlePackages" value="true" />
++    <option name="showLibraryContents" value="true" />
+   </component>
+   <component name="PropertiesComponent"><![CDATA[{
+   "keyToString": {
++    "ModuleVcsDetector.initialDetectionPerformed": "true",
++    "RunOnceActivity.ShowReadmeOnStart": "true",
++    "RunOnceActivity.git.unshallow": "true",
++    "RunOnceActivity.go.formatter.settings.were.checked": "true",
++    "RunOnceActivity.go.migrated.go.modules.settings": "true",
+     "dart.analysis.tool.window.visible": "false",
++    "git-widget-placeholder": "funChanges",
+     "go.import.settings.migrated": "true",
+     "node.js.detected.package.eslint": "true",
+     "node.js.detected.package.tslint": "true",
+     "node.js.selected.package.eslint": "(autodetect)",
+-    "node.js.selected.package.tslint": "(autodetect)"
++    "node.js.selected.package.tslint": "(autodetect)",
++    "nodejs_package_manager_path": "npm",
++    "project.structure.last.edited": "Modules",
++    "project.structure.proportion": "0.0",
++    "project.structure.side.proportion": "0.0",
++    "settings.editor.selected.configurable": "configurable.group.editor",
++    "show.migrate.to.gradle.popup": "false",
++    "vue.rearranger.settings.migration": "true"
+   }
+ }]]></component>
+   <component name="RubyModuleManagerSettings">
+@@ -34,7 +75,125 @@
+       </list>
+     </option>
+   </component>
++  <component name="RunManager">
++    <configuration default="true" type="GoApplicationRunConfiguration" factoryName="Go Application">
++      <module name="hunterReportGlue" />
++      <working_directory value="$PROJECT_DIR$" />
++      <go_parameters value="-i" />
++      <kind />
++      <directory value="$PROJECT_DIR$" />
++      <filePath value="$PROJECT_DIR$" />
++      <method v="2" />
++    </configuration>
++    <configuration default="true" type="GoTestRunConfiguration" factoryName="Go Test">
++      <module name="hunterReportGlue" />
++      <working_directory value="$PROJECT_DIR$" />
++      <go_parameters value="-i" />
++      <kind />
++      <directory value="$PROJECT_DIR$" />
++      <filePath value="$PROJECT_DIR$" />
++      <framework value="gotest" />
++      <method v="2" />
++    </configuration>
++    <configuration default="true" type="JetRunConfigurationType">
++      <module name="hunterReportGlue" />
++      <method v="2">
++        <option name="Make" enabled="true" />
++      </method>
++    </configuration>
++    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
++      <module name="hunterReportGlue" />
++      <option name="filePath" />
++      <method v="2" />
++    </configuration>
++    <configuration default="true" type="PyBehaveRunConfigurationType" factoryName="Behave">
++      <module name="hunterReportGlue" />
++      <option name="ENV_FILES" value="" />
++      <option name="INTERPRETER_OPTIONS" value="" />
++      <option name="PARENT_ENVS" value="true" />
++      <option name="SDK_HOME" value="" />
++      <option name="WORKING_DIRECTORY" value="" />
++      <option name="IS_MODULE_SDK" value="true" />
++      <option name="ADD_CONTENT_ROOTS" value="true" />
++      <option name="ADD_SOURCE_ROOTS" value="true" />
++      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
++      <option name="ADDITIONAL_ARGS" value="" />
++      <method v="2" />
++    </configuration>
++    <configuration default="true" type="PythonConfigurationType" factoryName="Python">
++      <module name="hunterReportGlue" />
++      <option name="ENV_FILES" value="" />
++      <option name="INTERPRETER_OPTIONS" value="" />
++      <option name="PARENT_ENVS" value="true" />
++      <envs>
++        <env name="PYTHONUNBUFFERED" value="1" />
++      </envs>
++      <option name="SDK_HOME" value="" />
++      <option name="WORKING_DIRECTORY" value="" />
++      <option name="IS_MODULE_SDK" value="false" />
++      <option name="ADD_CONTENT_ROOTS" value="true" />
++      <option name="ADD_SOURCE_ROOTS" value="true" />
++      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
++      <option name="SCRIPT_NAME" value="" />
++      <option name="PARAMETERS" value="" />
++      <option name="SHOW_COMMAND_LINE" value="false" />
++      <option name="EMULATE_TERMINAL" value="false" />
++      <option name="MODULE_MODE" value="false" />
++      <option name="REDIRECT_INPUT" value="false" />
++      <option name="INPUT_FILE" value="" />
++      <method v="2" />
++    </configuration>
++    <configuration default="true" type="Python.FlaskServer">
++      <module name="hunterReportGlue" />
++      <option name="ENV_FILES" value="" />
++      <option name="INTERPRETER_OPTIONS" value="" />
++      <option name="PARENT_ENVS" value="true" />
++      <option name="SDK_HOME" value="" />
++      <option name="WORKING_DIRECTORY" value="" />
++      <option name="IS_MODULE_SDK" value="false" />
++      <option name="ADD_CONTENT_ROOTS" value="true" />
++      <option name="ADD_SOURCE_ROOTS" value="true" />
++      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
++      <option name="launchJavascriptDebuger" value="false" />
++      <method v="2" />
++    </configuration>
++    <configuration default="true" type="Tox" factoryName="Tox">
++      <module name="hunterReportGlue" />
++      <option name="ENV_FILES" value="" />
++      <option name="INTERPRETER_OPTIONS" value="" />
++      <option name="PARENT_ENVS" value="true" />
++      <option name="SDK_HOME" value="" />
++      <option name="WORKING_DIRECTORY" value="" />
++      <option name="IS_MODULE_SDK" value="false" />
++      <option name="ADD_CONTENT_ROOTS" value="true" />
++      <option name="ADD_SOURCE_ROOTS" value="true" />
++      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
++      <method v="2" />
++    </configuration>
++  </component>
++  <component name="SharedIndexes">
++    <attachedChunks>
++      <set>
++        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.25410.129" />
++        <option value="bundled-js-predefined-d6986cc7102b-6a121458b545-JavaScript-IU-251.25410.129" />
++      </set>
++    </attachedChunks>
++  </component>
+   <component name="TaskManager">
++    <task active="true" id="Default" summary="Default task">
++      <changelist id="4429ae5c-548a-4877-8733-a971f6e44774" name="Changes" comment="add docker files" />
++      <created>1748610725319</created>
++      <option name="number" value="Default" />
++      <option name="presentableId" value="Default" />
++      <updated>1748610725319</updated>
++      <workItem from="1748610726546" duration="1301000" />
++    </task>
+     <servers />
+   </component>
++  <component name="TypeScriptGeneratedFilesManager">
++    <option name="version" value="3" />
++  </component>
++  <component name="VgoProject">
++    <settings-migrated>true</settings-migrated>
++  </component>
+ </project>
+\ No newline at end of file

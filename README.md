@@ -1,22 +1,41 @@
-# Huner report glue
+# Hunter Report Generator (Rust Version)
 
-Render description of different items from file,
-then user picks desired ones and they will be combined and put in clipboard
+A high-performance report generator built with Rust, Yew (frontend), and Axum (backend).
 
-## Dev convenience:
+## Features
+- **Fast & Safe:** Built with Rust for memory safety and performance.
+- **WebAssembly:** Frontend compiled to WASM using Yew.
+- **DOCX Generation:** Server-side `.docx` file generation.
+- **Wizard Flow:** Easy-to-use step-by-step process.
 
-### watchify to build browserify bundle on changes
-watchify ./scripts/hunterReport.js -o ./scripts/bundle.js -v
-### start node server
-nodemon testNode.js
-or
-pm2 start testNode.js --watch
+## Prerequisites
+- Rust (latest stable)
+- `wasm-pack` (for building the frontend)
+- `cargo`
 
-### make pm2 start with system
-once app is running, check pm2 status
-pm2 startup
-pm2 save
+## Project Structure
+- `backend/`: Axum server that handles API requests and serves static files.
+- `frontend/`: Yew-based WASM application.
+- `static/`: Static assets, including the compiled frontend and data files.
+- `data/`: Raw data files.
 
-### access app
-port forwarding has to be done to vm hosting app
-http://babilonas.myqnapcloud.com:8089/hunterReport
+## Development Setup
+
+### Build the Frontend
+Navigate to the `frontend` directory and run:
+```bash
+wasm-pack build --target web --out-dir ../static/hunterReport/pkg
+```
+
+### Start the Backend
+From the project root:
+```bash
+cargo run --bin hunter_report_backend
+```
+
+### Access the application
+Once the server is running, open your browser and go to:
+[http://127.0.0.1:8081/hunterReport](http://127.0.0.1:8081/hunterReport)
+
+## License
+ISC

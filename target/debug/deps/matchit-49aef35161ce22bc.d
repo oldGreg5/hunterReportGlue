@@ -1,0 +1,11 @@
+/Users/januszjanus/git/hunterReport/target/debug/deps/matchit-49aef35161ce22bc.d: /Users/januszjanus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/matchit-0.7.3/src/lib.rs /Users/januszjanus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/matchit-0.7.3/src/error.rs /Users/januszjanus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/matchit-0.7.3/src/params.rs /Users/januszjanus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/matchit-0.7.3/src/router.rs /Users/januszjanus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/matchit-0.7.3/src/tree.rs
+
+/Users/januszjanus/git/hunterReport/target/debug/deps/libmatchit-49aef35161ce22bc.rlib: /Users/januszjanus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/matchit-0.7.3/src/lib.rs /Users/januszjanus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/matchit-0.7.3/src/error.rs /Users/januszjanus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/matchit-0.7.3/src/params.rs /Users/januszjanus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/matchit-0.7.3/src/router.rs /Users/januszjanus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/matchit-0.7.3/src/tree.rs
+
+/Users/januszjanus/git/hunterReport/target/debug/deps/libmatchit-49aef35161ce22bc.rmeta: /Users/januszjanus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/matchit-0.7.3/src/lib.rs /Users/januszjanus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/matchit-0.7.3/src/error.rs /Users/januszjanus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/matchit-0.7.3/src/params.rs /Users/januszjanus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/matchit-0.7.3/src/router.rs /Users/januszjanus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/matchit-0.7.3/src/tree.rs
+
+/Users/januszjanus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/matchit-0.7.3/src/lib.rs:
+/Users/januszjanus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/matchit-0.7.3/src/error.rs:
+/Users/januszjanus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/matchit-0.7.3/src/params.rs:
+/Users/januszjanus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/matchit-0.7.3/src/router.rs:
+/Users/januszjanus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/matchit-0.7.3/src/tree.rs:
