@@ -74,23 +74,22 @@ async fn generate_docx(
 
     let mut docx = Docx::new();
     docx = docx.add_paragraph(
-        Paragraph::new().add_run(
-            Run::new()
-                .add_text(format!(
-                    "{} Vega Test {}",
-                    payload.full_name.trim(),
-                    payload.test_date.trim()
-                ))
-                .bold()
-                .size(32),
+        make_para().add_run(
+            make_run(format!(
+                "{} Vega Test {}",
+                payload.full_name.trim(),
+                payload.test_date.trim()
+            ))
+            .bold()
+            .size(32),
         ),
     );
-    docx = docx.add_paragraph(Paragraph::new());
+    docx = docx.add_paragraph(make_para());
 
     docx = add_heading_and_text(docx, "Zgłaszane dolegliwości", &payload.manual_notes);
 
     docx = docx.add_paragraph(
-        Paragraph::new().add_run(Run::new().add_text("Wskazanie na obciążenia").bold().size(28)),
+        make_para().add_run(make_run("Wskazanie na obciążenia").bold().size(28)),
     );
     {
         let joined = payload.burdens.join(", ");
@@ -105,12 +104,12 @@ async fn generate_docx(
             format!("{joined} {extra}")
         };
         if line.is_empty() {
-            docx = docx.add_paragraph(Paragraph::new());
+            docx = docx.add_paragraph(make_para());
         } else {
-            docx = docx.add_paragraph(Paragraph::new().add_run(Run::new().add_text(line).size(24)));
+            docx = docx.add_paragraph(make_para().add_run(make_run(line).size(24)));
         }
     }
-    docx = docx.add_paragraph(Paragraph::new());
+    docx = docx.add_paragraph(make_para());
 
     docx = add_heading_and_text(docx, "Metale toksyczne", &payload.toxic_metals);
     docx = add_heading_and_text(docx, "Niedobory", &payload.deficiencies);
@@ -121,26 +120,21 @@ async fn generate_docx(
     );
 
     docx = docx.add_paragraph(
-        Paragraph::new().add_run(
-            Run::new()
-                .add_text("Opis")
-                .bold()
-                .size(28),
-        ),
+        make_para().add_run(make_run("Opis").bold().size(28)),
     );
     if payload.selected_pathogens.is_empty() {
-        docx = docx.add_paragraph(Paragraph::new());
+        docx = docx.add_paragraph(make_para());
     } else {
         for key in payload.selected_pathogens.iter() {
             let val = state.descriptions.get(key).cloned().unwrap_or_default();
             docx = docx.add_paragraph(
-                Paragraph::new()
-                    .add_run(Run::new().add_text(key).bold().size(24))
-                    .add_run(Run::new().add_text(format!(" - {val}")).size(24)),
+                make_para()
+                    .add_run(make_run(key).bold().size(24))
+                    .add_run(make_run(format!(" - {val}")).size(24)),
             );
         }
     }
-    docx = docx.add_paragraph(Paragraph::new());
+    docx = docx.add_paragraph(make_para());
 
     docx = add_heading_and_text(docx, "Zalecenia", &payload.recommendations);
 
@@ -171,7 +165,7 @@ async fn generate_docx(
 
 fn add_heading_and_text(mut docx: Docx, heading: &str, text: &str) -> Docx {
     docx = docx.add_paragraph(
-        Paragraph::new().add_run(Run::new().add_text(heading).bold().size(28)),
+        make_para().add_run(make_run(heading).bold().size(28)),
     );
     let normalized = text.replace("\r\n", "\n").replace('\r', "\n");
     let mut has_any = false;
@@ -182,12 +176,27 @@ fn add_heading_and_text(mut docx: Docx, heading: &str, text: &str) -> Docx {
         }
     }
     if !has_any {
-        return docx.add_paragraph(Paragraph::new());
+        return docx.add_paragraph(make_para());
     }
     for line in normalized.split('\n') {
-        docx = docx.add_paragraph(Paragraph::new().add_run(Run::new().add_text(line).size(24)));
+        docx = docx.add_paragraph(make_para().add_run(make_run(line).size(24)));
     }
-    docx.add_paragraph(Paragraph::new())
+    docx.add_paragraph(make_para())
+}
+
+fn make_run(text: impl Into<String>) -> Run {
+    Run::new()
+        .add_text(text.into())
+        .fonts(RunFonts::new().ascii("Aptos").hi_ansi("Aptos"))
+}
+
+fn make_para() -> Paragraph {
+    Paragraph::new().line_spacing(
+        LineSpacing::new()
+            .line(278)
+            .line_rule(LineSpacingType::Auto)
+            .after(160),
+    )
 }
 
 fn sanitize_filename(s: &str) -> String {
