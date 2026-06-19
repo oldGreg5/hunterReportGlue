@@ -3,7 +3,7 @@ body {
   background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200" opacity="0.07"><path fill="%23467c46" d="M50,30 C60,25 70,30 75,40 C85,35 95,40 98,50 C105,45 115,50 118,60 C125,55 135,60 140,70 C145,65 152,70 155,80 C128,75 100,90 95,120 C90,90 60,75 40,90 C45,80 52,75 60,75 C55,65 58,55 65,50 C60,40 62,35 70,30 C60,25 55,20 50,30 Z M150,100 C160,95 170,100 175,110 C185,105 195,110 198,120 C205,115 215,120 218,130 C225,125 235,130 240,140 C245,135 252,140 255,150 C228,145 200,160 195,190 C190,160 160,145 140,160 C145,150 152,145 160,145 C155,135 158,125 165,120 C160,110 162,105 170,100 C160,95 155,90 150,100 Z"></path></svg>');
   background-repeat: repeat;
   background-size: 400px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Aptos', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   text-align: left;
   margin: 0;
   padding: 0;
