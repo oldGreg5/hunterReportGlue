@@ -1,5 +1,5 @@
 # --- Build Stage: Frontend (WASM) ---
-FROM rust:1.80-slim AS frontend-builder
+FROM rust:1.88-slim AS frontend-builder
 
 # Install wasm-pack
 RUN apt-get update && apt-get install -y curl pkg-config libssl-dev && \
@@ -12,7 +12,7 @@ WORKDIR /usr/src/app/frontend
 RUN wasm-pack build --target web --out-dir ../static/hunterReport/pkg
 
 # --- Build Stage: Backend ---
-FROM rust:1.80-slim AS backend-builder
+FROM rust:1.88-slim AS backend-builder
 
 WORKDIR /usr/src/app
 COPY . .

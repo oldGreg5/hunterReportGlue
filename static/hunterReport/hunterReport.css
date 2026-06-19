@@ -309,6 +309,90 @@ input[type=checkbox]:checked + span {
   transition: all 0.3s ease;
 }
 
+.app-top {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 0.8rem 0 0.5rem;
+}
+
+.app-top h1 {
+  margin: 0;
+}
+
+.mode-switch {
+  display: flex;
+  gap: 3px;
+  background: #e8f5e9;
+  padding: 3px;
+  border-radius: 6px;
+}
+
+.mode-btn {
+  border: none;
+  border-radius: 4px;
+  padding: 4px 14px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: transparent;
+  color: #2e7d32;
+  transition: all 0.2s;
+}
+
+.mode-btn--active {
+  background: #2e7d32;
+  color: white;
+}
+
+.mode-btn:hover:not(.mode-btn--active) {
+  background: #c8e6c9;
+}
+
+.patogeny-layout {
+  height: calc(100vh - 200px);
+}
+
+.selected-list {
+  flex: 1;
+  width: 100%;
+  overflow-y: auto;
+  margin-top: 8px;
+  border: 1px solid #c8e6c9;
+  border-radius: 6px;
+  padding: 6px;
+  background: rgba(255,255,255,0.9);
+  min-height: 0;
+  box-sizing: border-box;
+}
+
+.patogeny-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  width: 100%;
+}
+
+.selected-item {
+  font-size: 0.8rem;
+  padding: 4px 2px;
+  border-bottom: 1px solid #e8f5e9;
+  line-height: 1.4;
+}
+
+.selected-item:last-child {
+  border-bottom: none;
+}
+
+.selected-item-name {
+  font-weight: 600;
+  color: #2e7d32;
+}
+
+.selected-item-desc {
+  color: #555;
+}
+
  .wizard {
   width: 100%;
   flex: 1;
@@ -330,7 +414,8 @@ input[type=checkbox]:checked + span {
 }
 
 .wizard-title {
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 1.4rem;
   color: #1b5e20;
 }
 
@@ -351,7 +436,8 @@ input[type=checkbox]:checked + span {
 .wizard-step h2 {
   margin: 0 0 0.8rem 0;
   color: #2e7d32;
-  font-size: 1.1rem;
+  font-size: 1.4rem;
+  font-weight: 700;
 }
 
 .wizard-field {
@@ -411,10 +497,26 @@ input[type=checkbox]:checked + span {
   color: #2c3e2c;
 }
 
+.wizard-body {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  flex: 1;
+  overflow: hidden;
+  align-items: flex-start;
+}
+
+.wizard-content {
+  flex: 1;
+  overflow: hidden;
+  min-height: 0;
+}
+
 .wizard-nav {
   display: flex;
-  gap: 10px;
-  padding: 12px 0 0 0;
+  flex-direction: column;
+  gap: 8px;
+  flex-shrink: 0;
 }
 
 .wizard-button {
@@ -422,7 +524,8 @@ input[type=checkbox]:checked + span {
   overflow: hidden;
   border: none;
   border-radius: 4px;
-  padding: 10px 16px;
+  padding: 10px 0;
+  width: 120px;
   background-color: #2e7d32;
   color: white;
   font-weight: 600;
@@ -432,6 +535,7 @@ input[type=checkbox]:checked + span {
   transition: all 0.3s;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  text-align: center;
 }
 
 .wizard-button:hover {

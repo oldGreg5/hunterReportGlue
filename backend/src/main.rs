@@ -18,6 +18,7 @@ struct WizardStatePayload {
     test_date: String,
     manual_notes: String,
     burdens: Vec<String>,
+    burdens_extra: String,
     toxic_metals: String,
     deficiencies: String,
     frequencies: String,
@@ -73,38 +74,60 @@ async fn generate_docx(
 
     let mut docx = Docx::new();
     docx = docx.add_paragraph(
-        Paragraph::new().add_run(Run::new().add_text(format!(
-            "{} Vega Test {}",
-            payload.full_name.trim(),
-            payload.test_date.trim()
-        ))),
+        Paragraph::new().add_run(
+            Run::new()
+                .add_text(format!(
+                    "{} Vega Test {}",
+                    payload.full_name.trim(),
+                    payload.test_date.trim()
+                ))
+                .bold()
+                .size(32),
+        ),
     );
     docx = docx.add_paragraph(Paragraph::new());
 
-    docx = add_heading_and_text(docx, "2. Ręczne notki", &payload.manual_notes);
+    docx = add_heading_and_text(docx, "Zgłaszane dolegliwości", &payload.manual_notes);
 
-    docx = docx.add_paragraph(Paragraph::new().add_run(Run::new().add_text(
-        "3. Wskazanie na obciążenia",
-    )));
-    if payload.burdens.is_empty() {
-        docx = docx.add_paragraph(Paragraph::new());
-    } else {
-        for burden in payload.burdens.iter() {
-            docx = docx.add_paragraph(Paragraph::new().add_run(Run::new().add_text(burden)));
+    docx = docx.add_paragraph(
+        Paragraph::new().add_run(Run::new().add_text("Wskazanie na obciążenia").bold().size(28)),
+    );
+    {
+        let joined = payload.burdens.join(", ");
+        let extra = payload.burdens_extra.trim();
+        let line = if joined.is_empty() && extra.is_empty() {
+            String::new()
+        } else if joined.is_empty() {
+            extra.to_string()
+        } else if extra.is_empty() {
+            joined
+        } else {
+            format!("{joined} {extra}")
+        };
+        if line.is_empty() {
+            docx = docx.add_paragraph(Paragraph::new());
+        } else {
+            docx = docx.add_paragraph(Paragraph::new().add_run(Run::new().add_text(line).size(24)));
         }
     }
+    docx = docx.add_paragraph(Paragraph::new());
 
-    docx = add_heading_and_text(docx, "4. Metale toksyczne", &payload.toxic_metals);
-    docx = add_heading_and_text(docx, "5. Niedobory", &payload.deficiencies);
+    docx = add_heading_and_text(docx, "Metale toksyczne", &payload.toxic_metals);
+    docx = add_heading_and_text(docx, "Niedobory", &payload.deficiencies);
     docx = add_heading_and_text(
         docx,
-        "6. Częstotliwości mogące odpowiadać patogenom",
+        "Częstotliwości mogące odpowiadać patogenom",
         &payload.frequencies,
     );
 
-    docx = docx.add_paragraph(Paragraph::new().add_run(Run::new().add_text(
-        "7. Wyklikane z hunterreportglue opisy patogenów",
-    )));
+    docx = docx.add_paragraph(
+        Paragraph::new().add_run(
+            Run::new()
+                .add_text("Opis")
+                .bold()
+                .size(28),
+        ),
+    );
     if payload.selected_pathogens.is_empty() {
         docx = docx.add_paragraph(Paragraph::new());
     } else {
@@ -112,13 +135,14 @@ async fn generate_docx(
             let val = state.descriptions.get(key).cloned().unwrap_or_default();
             docx = docx.add_paragraph(
                 Paragraph::new()
-                    .add_run(Run::new().add_text(key).bold())
-                    .add_run(Run::new().add_text(format!(" - {val}"))),
+                    .add_run(Run::new().add_text(key).bold().size(24))
+                    .add_run(Run::new().add_text(format!(" - {val}")).size(24)),
             );
         }
     }
+    docx = docx.add_paragraph(Paragraph::new());
 
-    docx = add_heading_and_text(docx, "8. Zalecenia", &payload.recommendations);
+    docx = add_heading_and_text(docx, "Zalecenia", &payload.recommendations);
 
     let mut buffer = Cursor::new(Vec::new());
     if let Err(err) = docx.build().pack(&mut buffer) {
@@ -146,7 +170,9 @@ async fn generate_docx(
 }
 
 fn add_heading_and_text(mut docx: Docx, heading: &str, text: &str) -> Docx {
-    docx = docx.add_paragraph(Paragraph::new().add_run(Run::new().add_text(heading)));
+    docx = docx.add_paragraph(
+        Paragraph::new().add_run(Run::new().add_text(heading).bold().size(28)),
+    );
     let normalized = text.replace("\r\n", "\n").replace('\r', "\n");
     let mut has_any = false;
     for line in normalized.split('\n') {
@@ -159,9 +185,9 @@ fn add_heading_and_text(mut docx: Docx, heading: &str, text: &str) -> Docx {
         return docx.add_paragraph(Paragraph::new());
     }
     for line in normalized.split('\n') {
-        docx = docx.add_paragraph(Paragraph::new().add_run(Run::new().add_text(line)));
+        docx = docx.add_paragraph(Paragraph::new().add_run(Run::new().add_text(line).size(24)));
     }
-    docx
+    docx.add_paragraph(Paragraph::new())
 }
 
 fn sanitize_filename(s: &str) -> String {

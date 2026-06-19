@@ -23,6 +23,7 @@ struct WizardState {
     test_date: String,
     manual_notes: String,
     burdens: Vec<String>,
+    burdens_extra: String,
     toxic_metals: String,
     deficiencies: String,
     frequencies: String,
@@ -39,6 +40,7 @@ impl Default for WizardState {
             test_date: date_only,
             manual_notes: "".to_string(),
             burdens: vec![],
+            burdens_extra: "".to_string(),
             toxic_metals: "".to_string(),
             deficiencies: "".to_string(),
             frequencies: "".to_string(),
@@ -55,6 +57,7 @@ fn app() -> Html {
     let current_step = use_state(|| 0);
     let search_text = use_state(|| "".to_string());
     let loading = use_state(|| true);
+    let app_mode = use_state(|| 0usize); // 0 = wizard, 1 = patogeny
 
     {
         let categories = categories.clone();
@@ -94,6 +97,72 @@ fn app() -> Html {
             }
             if *current_step < 7 {
                 current_step.set(*current_step + 1);
+            }
+        })
+    };
+
+    let on_reset = {
+        let current_step = current_step.clone();
+        let wizard_state = wizard_state.clone();
+        Callback::from(move |_| {
+            wizard_state.set(WizardState::default());
+            current_step.set(0);
+        })
+    };
+
+    let on_mode_wizard = {
+        let app_mode = app_mode.clone();
+        Callback::from(move |_: MouseEvent| app_mode.set(0))
+    };
+    let on_mode_patogeny = {
+        let app_mode = app_mode.clone();
+        Callback::from(move |_: MouseEvent| app_mode.set(1))
+    };
+
+    let on_copy = {
+        let wizard_state = wizard_state.clone();
+        let categories = categories.clone();
+        Callback::from(move |_: MouseEvent| {
+            let selected = (*wizard_state).selected_pathogens.clone();
+            let desc_map: std::collections::HashMap<String, String> = (*categories).iter()
+                .flat_map(|c| c.items.iter())
+                .map(|i| (i.name.clone(), i.description.clone()))
+                .collect();
+
+            let mut html_parts = Vec::new();
+            let mut text_parts = Vec::new();
+            for name in &selected {
+                let desc = desc_map.get(name).cloned().unwrap_or_default();
+                if desc.is_empty() {
+                    html_parts.push(format!("<p><b>{}</b></p>", escape_html(name)));
+                    text_parts.push(name.clone());
+                } else {
+                    html_parts.push(format!("<p><b>{}</b> - {}</p>", escape_html(name), escape_html(&desc)));
+                    text_parts.push(format!("{name} - {desc}"));
+                }
+            }
+            let html_content = html_parts.join("");
+            let text_content = text_parts.join("\n");
+
+            let write_fn = js_sys::Function::new_with_args(
+                "htmlContent, textContent",
+                r#"
+                return (async () => {
+                    const htmlBlob = new Blob([htmlContent], { type: 'text/html' });
+                    const textBlob = new Blob([textContent], { type: 'text/plain' });
+                    const item = new ClipboardItem({ 'text/html': htmlBlob, 'text/plain': textBlob });
+                    await navigator.clipboard.write([item]);
+                })();
+                "#,
+            );
+            let html_val = wasm_bindgen::JsValue::from_str(&html_content);
+            let text_val = wasm_bindgen::JsValue::from_str(&text_content);
+            if let Ok(promise) = write_fn.call2(&wasm_bindgen::JsValue::NULL, &html_val, &text_val) {
+                if let Ok(promise) = promise.dyn_into::<js_sys::Promise>() {
+                    wasm_bindgen_futures::spawn_local(async move {
+                        let _ = wasm_bindgen_futures::JsFuture::from(promise).await;
+                    });
+                }
             }
         })
     };
@@ -138,14 +207,14 @@ fn app() -> Html {
     };
 
     let steps = vec![
-        "1. Vega Test",
-        "2. Ręczne notki",
-        "3. Wskazanie na obciążenia",
-        "4. Metale toksyczne",
-        "5. Niedobory",
-        "6. Częstotliwości",
-        "7. Opisy patogenów",
-        "8. Zalecenia",
+        "Vega Test",
+        "Zgłaszane dolegliwości",
+        "Wskazanie na obciążenia",
+        "Metale toksyczne",
+        "Niedobory",
+        "Częstotliwości",
+        "Opisy patogenów",
+        "Zalecenia",
     ];
 
     html! {
@@ -154,46 +223,75 @@ fn app() -> Html {
                 <div id="nav-bar"></div>
             </header>
             <main>
-                <h1>{"Vega Test Wizard"}</h1>
-                <div class="wizard">
-                    <div class="wizard-header">
-                        <div class="wizard-progress">{format!("Step {} / {}", *current_step + 1, steps.len())}</div>
-                        <div class="wizard-title">{steps[*current_step]}</div>
-                    </div>
-
-                    {render_step(*current_step, &wizard_state, &categories, &search_text)}
-
-                    <div class="wizard-nav">
-                        <button 
-                            id="wizardPrev" 
-                            type="button" 
-                            class="wizard-button wizard-button-secondary"
-                            disabled={*current_step == 0}
-                            onclick={on_prev}
-                        >
-                            {"Back"}
-                        </button>
-                        if *current_step < 7 {
-                            <button 
-                                id="wizardNext" 
-                                type="button" 
-                                class="wizard-button"
-                                onclick={on_next}
-                            >
-                                {"Next"}
-                            </button>
-                        } else {
-                            <button 
-                                id="wizardDownload" 
-                                type="button" 
-                                class="wizard-button"
-                                onclick={on_download}
-                            >
-                                {"Download .docx"}
-                            </button>
-                        }
+                <div class="app-top">
+                    <h1>{"Vega Test Wizard"}</h1>
+                    <div class="mode-switch">
+                        <button
+                            class={if *app_mode == 0 { "mode-btn mode-btn--active" } else { "mode-btn" }}
+                            onclick={on_mode_wizard}
+                        >{"Wizard"}</button>
+                        <button
+                            class={if *app_mode == 1 { "mode-btn mode-btn--active" } else { "mode-btn" }}
+                            onclick={on_mode_patogeny}
+                        >{"Patogeny"}</button>
                     </div>
                 </div>
+                if *app_mode == 0 {
+                    <div class="wizard">
+                        <div class="wizard-header">
+                            <div class="wizard-progress">{format!("Step {} / {}", *current_step + 1, steps.len())}</div>
+                            <div class="wizard-title">{steps[*current_step]}</div>
+                        </div>
+
+                        <div class="wizard-body">
+                            <div class="wizard-nav">
+                                <button
+                                    id="wizardPrev"
+                                    type="button"
+                                    class="wizard-button wizard-button-secondary"
+                                    disabled={*current_step == 0}
+                                    onclick={on_prev}
+                                >
+                                    {"Back"}
+                                </button>
+                                if *current_step < 7 {
+                                    <button
+                                        id="wizardNext"
+                                        type="button"
+                                        class="wizard-button"
+                                        onclick={on_next}
+                                    >
+                                        {"Next"}
+                                    </button>
+                                } else {
+                                    <>
+                                        <button
+                                            id="wizardDownload"
+                                            type="button"
+                                            class="wizard-button"
+                                            onclick={on_download}
+                                        >
+                                            {"Download .docx"}
+                                        </button>
+                                        <button
+                                            id="wizardReset"
+                                            type="button"
+                                            class="wizard-button wizard-button-secondary"
+                                            onclick={on_reset}
+                                        >
+                                            {"Reset"}
+                                        </button>
+                                    </>
+                                }
+                            </div>
+                            <div class="wizard-content">
+                                {render_step(*current_step, &wizard_state, &categories, &search_text)}
+                            </div>
+                        </div>
+                    </div>
+                } else {
+                    {render_patogeny(&wizard_state, &categories, &search_text, on_copy)}
+                }
             </main>
             <footer>
                 <p>{"© 2026 Hunter Report Generator | Rust/Yew v0.1"}</p>
@@ -206,7 +304,6 @@ fn render_step(step: usize, state: &UseStateHandle<WizardState>, categories: &Ve
     match step {
         0 => html! {
             <section class="wizard-step wizard-step--active">
-                <h2>{"1. Vega Test"}</h2>
                 <div class="wizard-field">
                     <label>{"Imię i nazwisko"}</label>
                     <input 
@@ -243,7 +340,6 @@ fn render_step(step: usize, state: &UseStateHandle<WizardState>, categories: &Ve
         },
         1 => html! {
             <section class="wizard-step wizard-step--active">
-                <h2>{"2. Ręczne notki"}</h2>
                 <textarea 
                     class="wizard-textarea" 
                     rows="10" 
@@ -261,11 +357,10 @@ fn render_step(step: usize, state: &UseStateHandle<WizardState>, categories: &Ve
             </section>
         },
         2 => {
-            let burdens = vec!["zarazki", "pasożyty", "bakteryjne", "wirusowe", "grzybicze", "mykotoksyczne"];
+            let burdens = vec!["stomatologiczne", "pasożytnicze", "bakteryjne", "wirusowe", "grzybicze", "mykotoksyczne", "geopatyczne", "elektrosmogiem"];
             let current_burdens: HashSet<_> = state.burdens.iter().cloned().collect();
             html! {
                 <section class="wizard-step wizard-step--active">
-                    <h2>{"3. Wskazanie na obciążenia"}</h2>
                     <div class="wizard-checkboxes">
                         {for burdens.into_iter().map(|b| {
                             let checked = current_burdens.contains(b);
@@ -292,12 +387,27 @@ fn render_step(step: usize, state: &UseStateHandle<WizardState>, categories: &Ve
                             }
                         })}
                     </div>
+                    <div class="wizard-field" style="margin-top: 0.8rem;">
+                        <label>{"Dodatkowe informacje"}</label>
+                        <input
+                            type="text"
+                            value={state.burdens_extra.clone()}
+                            oninput={
+                                let state = state.clone();
+                                Callback::from(move |e: InputEvent| {
+                                    let input: HtmlInputElement = e.target_unchecked_into();
+                                    let mut s = (*state).clone();
+                                    s.burdens_extra = input.value();
+                                    state.set(s);
+                                })
+                            }
+                        />
+                    </div>
                 </section>
             }
         },
         3 => html! {
             <section class="wizard-step wizard-step--active">
-                <h2>{"4. Metale toksyczne"}</h2>
                 <textarea 
                     class="wizard-textarea" 
                     rows="10" 
@@ -316,7 +426,6 @@ fn render_step(step: usize, state: &UseStateHandle<WizardState>, categories: &Ve
         },
         4 => html! {
             <section class="wizard-step wizard-step--active">
-                <h2>{"5. Niedobory"}</h2>
                 <textarea 
                     class="wizard-textarea" 
                     rows="10" 
@@ -335,7 +444,6 @@ fn render_step(step: usize, state: &UseStateHandle<WizardState>, categories: &Ve
         },
         5 => html! {
             <section class="wizard-step wizard-step--active">
-                <h2>{"6. Częstotliwości"}</h2>
                 <textarea 
                     class="wizard-textarea" 
                     rows="10" 
@@ -357,7 +465,6 @@ fn render_step(step: usize, state: &UseStateHandle<WizardState>, categories: &Ve
             let filter = search_text.to_lowercase();
             html! {
                 <section class="wizard-step wizard-step--active">
-                    <h2>{"7. Opisy patogenów"}</h2>
                     <div class="wizard-step7-layout layout-container">
                         <div class="left-column">
                             <div class="search-container">
@@ -446,7 +553,6 @@ fn render_step(step: usize, state: &UseStateHandle<WizardState>, categories: &Ve
         },
         7 => html! {
             <section class="wizard-step wizard-step--active">
-                <h2>{"8. Zalecenia"}</h2>
                 <textarea 
                     class="wizard-textarea" 
                     rows="10" 
@@ -465,6 +571,140 @@ fn render_step(step: usize, state: &UseStateHandle<WizardState>, categories: &Ve
         },
         _ => html! {},
     }
+}
+
+fn render_patogeny(
+    state: &UseStateHandle<WizardState>,
+    categories: &UseStateHandle<Vec<Category>>,
+    search_text: &UseStateHandle<String>,
+    on_copy: Callback<MouseEvent>,
+) -> Html {
+    let selected_pathogens: HashSet<_> = state.selected_pathogens.iter().cloned().collect();
+    let filter = search_text.to_lowercase();
+
+    let on_reset_selection = {
+        let state = state.clone();
+        Callback::from(move |_: MouseEvent| {
+            let mut s = (*state).clone();
+            s.selected_pathogens = vec![];
+            state.set(s);
+        })
+    };
+
+    let desc_map: std::collections::HashMap<String, String> = (**categories).iter()
+        .flat_map(|c| c.items.iter())
+        .map(|i| (i.name.clone(), i.description.clone()))
+        .collect();
+
+    html! {
+        <div class="patogeny-layout layout-container">
+            <div class="left-column">
+                <div class="search-container">
+                    <textarea
+                        class="search-input"
+                        placeholder="Search or paste list..."
+                        oninput={
+                            let search_text = search_text.clone();
+                            let state = state.clone();
+                            let categories = categories.clone();
+                            Callback::from(move |e: InputEvent| {
+                                let input: HtmlTextAreaElement = e.target_unchecked_into();
+                                let val = input.value();
+                                if val.contains('\n') {
+                                    let mut s = (*state).clone();
+                                    let lines: Vec<String> = val.lines().map(|l| l.trim().to_lowercase()).filter(|l| !l.is_empty()).collect();
+                                    for line in lines {
+                                        for cat in (*categories).iter() {
+                                            for item in &cat.items {
+                                                if item.name.to_lowercase() == line || item.name.to_lowercase().contains(&line) {
+                                                    if !s.selected_pathogens.contains(&item.name) {
+                                                        s.selected_pathogens.push(item.name.clone());
+                                                    }
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    state.set(s);
+                                }
+                                search_text.set(val);
+                            })
+                        }
+                    />
+                </div>
+                <div class="wizard-selected">{format!("Selected: {}", state.selected_pathogens.len())}</div>
+                <div class="selected-list">
+                    {for state.selected_pathogens.iter().map(|name| {
+                        let desc = desc_map.get(name).cloned().unwrap_or_default();
+                        html! {
+                            <div class="selected-item">
+                                <span class="selected-item-name">{name}</span>
+                                if !desc.is_empty() {
+                                    <span class="selected-item-desc">{format!(" - {desc}")}</span>
+                                }
+                            </div>
+                        }
+                    })}
+                </div>
+                <div class="patogeny-actions">
+                    <button class="wizard-button" onclick={on_copy} disabled={state.selected_pathogens.is_empty()}>
+                        {"Copy"}
+                    </button>
+                    <button class="wizard-button wizard-button-secondary" onclick={on_reset_selection} disabled={state.selected_pathogens.is_empty()}>
+                        {"Reset"}
+                    </button>
+                </div>
+            </div>
+            <div class="right-column">
+                <div class="boxes-table">
+                    {for (**categories).iter().map(|cat| {
+                        let items: Vec<_> = cat.items.iter().filter(|i| {
+                            filter.is_empty() || i.name.to_lowercase().contains(&filter)
+                        }).collect();
+
+                        if items.is_empty() && !filter.is_empty() {
+                            return html! {};
+                        }
+
+                        let cat_name = cat.name.clone();
+                        html! {
+                            <div class="boxes">
+                                <h3>{cat_name}</h3>
+                                {for items.into_iter().map(|item| {
+                                    let checked = selected_pathogens.contains(&item.name);
+                                    let state = state.clone();
+                                    let name = item.name.clone();
+                                    let display_name = item.name.clone();
+                                    html! {
+                                        <label class="item-label">
+                                            <input
+                                                type="checkbox"
+                                                checked={checked}
+                                                onclick={Callback::from(move |_| {
+                                                    let mut s = (*state).clone();
+                                                    if s.selected_pathogens.contains(&name) {
+                                                        s.selected_pathogens.retain(|x| x != &name);
+                                                    } else {
+                                                        s.selected_pathogens.push(name.clone());
+                                                    }
+                                                    state.set(s);
+                                                })}
+                                            />
+                                            <span>{display_name}</span>
+                                        </label>
+                                    }
+                                })}
+                            </div>
+                        }
+                    })}
+                </div>
+            </div>
+        </div>
+    }
+}
+
+fn escape_html(s: &str) -> String {
+    s.replace('&', "&amp;").replace('<', "&lt;").replace('>', "&gt;")
 }
 
 fn parse_description_file(text: &str) -> Vec<Category> {

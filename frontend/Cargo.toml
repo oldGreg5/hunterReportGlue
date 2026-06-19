@@ -15,4 +15,4 @@ serde_json = "1"
 gloo = { version = "0.10", features = ["dialogs"] }
 gloo-net = "0.4"
 js-sys = "0.3"
-web-sys = { version = "0.3", features = ["Window", "Document", "Element", "HtmlElement", "HtmlInputElement", "HtmlTextAreaElement", "HtmlButtonElement", "HtmlDivElement", "HtmlSpanElement", "HtmlAnchorElement", "Node", "DomTokenList", "Event", "InputEvent", "KeyboardEvent", "Blob", "Url"] }
+web-sys = { version = "0.3", features = ["Window", "Document", "Element", "HtmlElement", "HtmlInputElement", "HtmlTextAreaElement", "HtmlButtonElement", "HtmlDivElement", "HtmlSpanElement", "HtmlAnchorElement", "Node", "DomTokenList", "Event", "InputEvent", "KeyboardEvent", "Blob", "Url", "Navigator", "Clipboard"] }
