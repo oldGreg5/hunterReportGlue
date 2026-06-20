@@ -1,4 +1,9 @@
 target/
-.idea/workspace.xml
+.DS_Store
+.idea/
 hunterreport/
+frontend/static/
+static/*.js
+static/*.wasm
+static/index.html
 
