@@ -2,6 +2,7 @@ target/
 .DS_Store
 .idea/
 hunterreport/
+frontend/dist/
 frontend/static/
 static/*.js
 static/*.wasm
