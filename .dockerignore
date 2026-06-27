@@ -9,4 +9,7 @@ README.md
 *.md
 *.log
 *.bak
-.DS_Store 
+.DS_Store
+target/
+frontend/target/
+static/hunterReport/pkg/

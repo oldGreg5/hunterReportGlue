@@ -9,7 +9,7 @@ WORKDIR /usr/src/app
 COPY . .
 
 WORKDIR /usr/src/app/frontend
-RUN wasm-pack build --target web --out-dir ../static/hunterReport/pkg
+RUN wasm-pack build --target web --out-dir ../static/hunterReport/pkg --no-pack --release
 
 # --- Build Stage: Backend ---
 FROM rust:1.88-slim AS backend-builder
@@ -35,7 +35,6 @@ RUN groupadd -r nodeapp && useradd -r -g nodeapp nodeapp
 # Copy binary and static assets
 COPY --from=backend-builder /usr/src/app/target/release/hunter_report_backend ./hunter_report_backend
 COPY --from=backend-builder /usr/src/app/static ./static
-COPY --from=backend-builder /usr/src/app/data ./data
 
 # Set proper permissions
 RUN chown -R nodeapp:nodeapp /usr/src/app

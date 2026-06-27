@@ -54,10 +54,11 @@ impl Default for WizardState {
 fn app() -> Html {
     let categories = use_state(|| Vec::<Category>::new());
     let wizard_state = use_state(WizardState::default);
-    let current_step = use_state(|| 0);
+    let current_step = use_state(|| 0usize);
     let search_text = use_state(|| "".to_string());
     let loading = use_state(|| true);
-    let app_mode = use_state(|| 0usize); // 0 = wizard, 1 = patogeny
+    let app_mode = use_state(|| 0usize);
+    let dark_mode = use_state(|| false);
 
     {
         let categories = categories.clone();
@@ -107,6 +108,21 @@ fn app() -> Html {
         Callback::from(move |_| {
             wizard_state.set(WizardState::default());
             current_step.set(0);
+        })
+    };
+
+    let on_toggle_dark = {
+        let dark_mode = dark_mode.clone();
+        Callback::from(move |_: MouseEvent| {
+            let new_val = !*dark_mode;
+            dark_mode.set(new_val);
+            if let Some(body) = web_sys::window()
+                .and_then(|w| w.document())
+                .and_then(|d| d.body())
+            {
+                if new_val { let _ = body.class_list().add_1("dark"); }
+                else       { let _ = body.class_list().remove_1("dark"); }
+            }
         })
     };
 
@@ -188,10 +204,8 @@ fn app() -> Html {
                         let window = web_sys::window().unwrap();
                         let document = window.document().unwrap();
                         let a = document.create_element("a").unwrap().dyn_into::<web_sys::HtmlAnchorElement>().unwrap();
-                        
                         let file_name = format!("{}_Vega_Test_{}.docx", state.full_name, state.test_date)
                             .replace(" ", "_");
-                        
                         a.set_href(&url);
                         a.set_download(&file_name);
                         document.body().unwrap().append_child(&a).unwrap();
@@ -199,7 +213,7 @@ fn app() -> Html {
                         document.body().unwrap().remove_child(&a).unwrap();
                         web_sys::Url::revoke_object_url(&url).unwrap();
                     } else {
-                        gloo::dialogs::alert("Failed to generate docx");
+                        gloo::dialogs::alert("Nie udało się wygenerować raportu");
                     }
                 }
             });
@@ -217,75 +231,102 @@ fn app() -> Html {
         "Zalecenia",
     ];
 
+    let step_icons = vec![
+        "👤", "📋", "⚖️", "🧪", "💊", "〰️", "🔬", "📝",
+    ];
+
+    let step = *current_step;
+
     html! {
         <>
             <header>
-                <div id="nav-bar"></div>
-            </header>
-            <main>
-                <div class="app-top">
-                    <h1>{"Vega Test Wizard"}</h1>
-                    <div class="mode-switch">
+                <div id="nav-bar">
+                    <div class="header-brand">
+                        <span class="header-logo">{"🌿"}</span>
+                        <div class="header-text">
+                            <h1>{"Hunter Report"}</h1>
+                            <p class="header-subtitle">{"Generator Raportów Naturopatycznych"}</p>
+                        </div>
+                    </div>
+                    <div class="header-controls">
                         <button
-                            class={if *app_mode == 0 { "mode-btn mode-btn--active" } else { "mode-btn" }}
-                            onclick={on_mode_wizard}
-                        >{"Wizard"}</button>
-                        <button
-                            class={if *app_mode == 1 { "mode-btn mode-btn--active" } else { "mode-btn" }}
-                            onclick={on_mode_patogeny}
-                        >{"Patogeny"}</button>
+                            class="dark-toggle"
+                            onclick={on_toggle_dark}
+                            title={if *dark_mode { "Tryb jasny" } else { "Tryb ciemny" }}
+                        >{if *dark_mode { "☀" } else { "🌙" }}</button>
+                        <div class="mode-switch">
+                            <button
+                                class={if *app_mode == 0 { "mode-btn mode-btn--active" } else { "mode-btn" }}
+                                onclick={on_mode_wizard}
+                            >{"Kreator"}</button>
+                            <button
+                                class={if *app_mode == 1 { "mode-btn mode-btn--active" } else { "mode-btn" }}
+                                onclick={on_mode_patogeny}
+                            >{"Patogeny"}</button>
+                        </div>
                     </div>
                 </div>
-                if *app_mode == 0 {
+            </header>
+            <main>
+                if *loading {
+                    <div class="loading-state">
+                        <div class="loading-spinner"></div>
+                        <p class="loading-text">{"Ładowanie danych naturopatycznych..."}</p>
+                    </div>
+                } else if *app_mode == 0 {
                     <div class="wizard">
                         <div class="wizard-header">
-                            <div class="wizard-progress">{format!("Step {} / {}", *current_step + 1, steps.len())}</div>
-                            <div class="wizard-title">{steps[*current_step]}</div>
+                            <div class="wizard-step-info">
+                                <div class="wizard-step-icon">{step_icons[step]}</div>
+                                <div>
+                                    <div class="wizard-progress">{format!("Krok {} z {}", step + 1, steps.len())}</div>
+                                    <div class="wizard-title">{steps[step]}</div>
+                                    if !wizard_state.full_name.is_empty() && step > 0 {
+                                        <div class="wizard-patient">{format!("Pacjent: {}", wizard_state.full_name)}</div>
+                                    }
+                                </div>
+                            </div>
+                            <div class="wizard-progress-bar">
+                                {for (0..steps.len()).map(|i| {
+                                    let cls = if i < step { "progress-dot completed" }
+                                              else if i == step { "progress-dot active" }
+                                              else { "progress-dot" };
+                                    html! { <div class={cls}></div> }
+                                })}
+                            </div>
                         </div>
 
                         <div class="wizard-body">
+                            <div class="wizard-content">
+                                {render_step(step, &wizard_state, &categories, &search_text)}
+                            </div>
                             <div class="wizard-nav">
                                 <button
-                                    id="wizardPrev"
                                     type="button"
-                                    class="wizard-button wizard-button-secondary"
-                                    disabled={*current_step == 0}
+                                    class="wizard-button-secondary"
+                                    disabled={step == 0}
                                     onclick={on_prev}
-                                >
-                                    {"Back"}
-                                </button>
-                                if *current_step < 7 {
+                                >{"← Wstecz"}</button>
+                                if step < 7 {
                                     <button
-                                        id="wizardNext"
                                         type="button"
                                         class="wizard-button"
                                         onclick={on_next}
-                                    >
-                                        {"Next"}
-                                    </button>
+                                    >{"Dalej →"}</button>
                                 } else {
                                     <>
                                         <button
-                                            id="wizardDownload"
                                             type="button"
                                             class="wizard-button"
                                             onclick={on_download}
-                                        >
-                                            {"Download .docx"}
-                                        </button>
+                                        >{"⬇ Pobierz .docx"}</button>
                                         <button
-                                            id="wizardReset"
                                             type="button"
-                                            class="wizard-button wizard-button-secondary"
+                                            class="wizard-button-secondary"
                                             onclick={on_reset}
-                                        >
-                                            {"Reset"}
-                                        </button>
+                                        >{"↺ Nowy raport"}</button>
                                     </>
                                 }
-                            </div>
-                            <div class="wizard-content">
-                                {render_step(*current_step, &wizard_state, &categories, &search_text)}
                             </div>
                         </div>
                     </div>
@@ -294,21 +335,27 @@ fn app() -> Html {
                 }
             </main>
             <footer>
-                <p>{"© 2026 Hunter Report Generator | Rust/Yew v0.1"}</p>
+                <p>{"© 2026 Hunter Report · Naturopatyczny Generator Raportów · Rust/Yew"}</p>
             </footer>
         </>
     }
 }
 
-fn render_step(step: usize, state: &UseStateHandle<WizardState>, categories: &Vec<Category>, search_text: &UseStateHandle<String>) -> Html {
+fn render_step(
+    step: usize,
+    state: &UseStateHandle<WizardState>,
+    categories: &UseStateHandle<Vec<Category>>,
+    search_text: &UseStateHandle<String>,
+) -> Html {
     match step {
         0 => html! {
             <section class="wizard-step wizard-step--active">
                 <div class="wizard-field">
-                    <label>{"Imię i nazwisko"}</label>
-                    <input 
-                        type="text" 
-                        value={state.full_name.clone()} 
+                    <label>{"Imię i nazwisko pacjenta"}</label>
+                    <input
+                        type="text"
+                        placeholder="np. Jan Kowalski"
+                        value={state.full_name.clone()}
                         oninput={
                             let state = state.clone();
                             Callback::from(move |e: InputEvent| {
@@ -321,9 +368,9 @@ fn render_step(step: usize, state: &UseStateHandle<WizardState>, categories: &Ve
                     />
                 </div>
                 <div class="wizard-field">
-                    <label>{"Data"}</label>
-                    <input 
-                        type="date" 
+                    <label>{"Data badania"}</label>
+                    <input
+                        type="date"
                         value={state.test_date.clone()}
                         oninput={
                             let state = state.clone();
@@ -340,9 +387,9 @@ fn render_step(step: usize, state: &UseStateHandle<WizardState>, categories: &Ve
         },
         1 => html! {
             <section class="wizard-step wizard-step--active">
-                <textarea 
-                    class="wizard-textarea" 
-                    rows="10" 
+                <textarea
+                    class="wizard-textarea"
+                    placeholder="Opisz zgłaszane przez pacjenta dolegliwości i objawy, np. bóle głowy, zmęczenie, problemy trawienne..."
                     value={state.manual_notes.clone()}
                     oninput={
                         let state = state.clone();
@@ -357,7 +404,10 @@ fn render_step(step: usize, state: &UseStateHandle<WizardState>, categories: &Ve
             </section>
         },
         2 => {
-            let burdens = vec!["stomatologiczne", "pasożytnicze", "bakteryjne", "wirusowe", "grzybicze", "mykotoksyczne", "geopatyczne", "elektrosmogiem"];
+            let burdens = vec![
+                "stomatologiczne", "pasożytnicze", "bakteryjne", "wirusowe",
+                "grzybicze", "mykotoksyczne", "geopatyczne", "elektrosmogiem",
+            ];
             let current_burdens: HashSet<_> = state.burdens.iter().cloned().collect();
             html! {
                 <section class="wizard-step wizard-step--active">
@@ -369,9 +419,9 @@ fn render_step(step: usize, state: &UseStateHandle<WizardState>, categories: &Ve
                             let b_span = b.to_string();
                             html! {
                                 <label class="wizard-checkbox">
-                                    <input 
-                                        type="checkbox" 
-                                        checked={checked} 
+                                    <input
+                                        type="checkbox"
+                                        checked={checked}
                                         onclick={Callback::from(move |_| {
                                             let mut s = (*state).clone();
                                             if s.burdens.contains(&b_name) {
@@ -387,10 +437,11 @@ fn render_step(step: usize, state: &UseStateHandle<WizardState>, categories: &Ve
                             }
                         })}
                     </div>
-                    <div class="wizard-field" style="margin-top: 0.8rem;">
+                    <div class="wizard-field" style="margin-top: 1rem;">
                         <label>{"Dodatkowe informacje"}</label>
                         <input
                             type="text"
+                            placeholder="Inne obciążenia lub uwagi..."
                             value={state.burdens_extra.clone()}
                             oninput={
                                 let state = state.clone();
@@ -408,9 +459,9 @@ fn render_step(step: usize, state: &UseStateHandle<WizardState>, categories: &Ve
         },
         3 => html! {
             <section class="wizard-step wizard-step--active">
-                <textarea 
-                    class="wizard-textarea" 
-                    rows="10" 
+                <textarea
+                    class="wizard-textarea"
+                    placeholder="Wymień wykryte metale toksyczne, np. ołów (Pb), rtęć (Hg), kadm (Cd), arsen (As), aluminium (Al)..."
                     value={state.toxic_metals.clone()}
                     oninput={
                         let state = state.clone();
@@ -426,9 +477,9 @@ fn render_step(step: usize, state: &UseStateHandle<WizardState>, categories: &Ve
         },
         4 => html! {
             <section class="wizard-step wizard-step--active">
-                <textarea 
-                    class="wizard-textarea" 
-                    rows="10" 
+                <textarea
+                    class="wizard-textarea"
+                    placeholder="Wymień wykryte niedobory, np. witamina D3, witamina B12, żelazo, magnez, cynk, kwasy omega-3..."
                     value={state.deficiencies.clone()}
                     oninput={
                         let state = state.clone();
@@ -444,9 +495,9 @@ fn render_step(step: usize, state: &UseStateHandle<WizardState>, categories: &Ve
         },
         5 => html! {
             <section class="wizard-step wizard-step--active">
-                <textarea 
-                    class="wizard-textarea" 
-                    rows="10" 
+                <textarea
+                    class="wizard-textarea"
+                    placeholder="Podaj wykryte częstotliwości patogenne z badania Vega Test..."
                     value={state.frequencies.clone()}
                     oninput={
                         let state = state.clone();
@@ -468,9 +519,9 @@ fn render_step(step: usize, state: &UseStateHandle<WizardState>, categories: &Ve
                     <div class="wizard-step7-layout layout-container">
                         <div class="left-column">
                             <div class="search-container">
-                                <textarea 
-                                    class="search-input" 
-                                    placeholder="Search or paste list..." 
+                                <textarea
+                                    class="search-input"
+                                    placeholder="Wyszukaj lub wklej listę patogenów (każdy w nowej linii)..."
                                     oninput={
                                         let search_text = search_text.clone();
                                         let state = state.clone();
@@ -479,13 +530,17 @@ fn render_step(step: usize, state: &UseStateHandle<WizardState>, categories: &Ve
                                             let input: HtmlTextAreaElement = e.target_unchecked_into();
                                             let val = input.value();
                                             if val.contains('\n') {
-                                                // Handle multiline paste/search
                                                 let mut s = (*state).clone();
-                                                let lines: Vec<String> = val.lines().map(|l| l.trim().to_lowercase()).filter(|l| !l.is_empty()).collect();
+                                                let lines: Vec<String> = val.lines()
+                                                    .map(|l| l.trim().to_lowercase())
+                                                    .filter(|l| !l.is_empty())
+                                                    .collect();
                                                 for line in lines {
-                                                    for cat in &categories {
+                                                    for cat in &*categories {
                                                         for item in &cat.items {
-                                                            if item.name.to_lowercase() == line || item.name.to_lowercase().contains(&line) {
+                                                            if item.name.to_lowercase() == line
+                                                                || item.name.to_lowercase().contains(&line)
+                                                            {
                                                                 if !s.selected_pathogens.contains(&item.name) {
                                                                     s.selected_pathogens.push(item.name.clone());
                                                                 }
@@ -501,7 +556,9 @@ fn render_step(step: usize, state: &UseStateHandle<WizardState>, categories: &Ve
                                     }
                                 />
                             </div>
-                            <div class="wizard-selected">{format!("Selected: {}", state.selected_pathogens.len())}</div>
+                            <div class="wizard-selected">
+                                {format!("Wybrano: {}", state.selected_pathogens.len())}
+                            </div>
                         </div>
                         <div class="right-column">
                             <div class="boxes-table">
@@ -509,11 +566,9 @@ fn render_step(step: usize, state: &UseStateHandle<WizardState>, categories: &Ve
                                     let items: Vec<_> = cat.items.iter().filter(|i| {
                                         filter.is_empty() || i.name.to_lowercase().contains(&filter)
                                     }).collect();
-                                    
                                     if items.is_empty() && !filter.is_empty() {
                                         return html! {};
                                     }
-                                    
                                     let cat_name = cat.name.clone();
                                     html! {
                                         <div class="boxes">
@@ -525,8 +580,8 @@ fn render_step(step: usize, state: &UseStateHandle<WizardState>, categories: &Ve
                                                 let display_name = item.name.clone();
                                                 html! {
                                                     <label class="item-label">
-                                                        <input 
-                                                            type="checkbox" 
+                                                        <input
+                                                            type="checkbox"
                                                             checked={checked}
                                                             onclick={Callback::from(move |_| {
                                                                 let mut s = (*state).clone();
@@ -553,9 +608,9 @@ fn render_step(step: usize, state: &UseStateHandle<WizardState>, categories: &Ve
         },
         7 => html! {
             <section class="wizard-step wizard-step--active">
-                <textarea 
-                    class="wizard-textarea" 
-                    rows="10" 
+                <textarea
+                    class="wizard-textarea"
+                    placeholder="Wpisz zalecenia terapeutyczne: suplementacja, dieta, styl życia, terapie wspierające..."
                     value={state.recommendations.clone()}
                     oninput={
                         let state = state.clone();
@@ -602,7 +657,7 @@ fn render_patogeny(
                 <div class="search-container">
                     <textarea
                         class="search-input"
-                        placeholder="Search or paste list..."
+                        placeholder="Wyszukaj lub wklej listę patogenów (każdy w nowej linii)..."
                         oninput={
                             let search_text = search_text.clone();
                             let state = state.clone();
@@ -612,11 +667,16 @@ fn render_patogeny(
                                 let val = input.value();
                                 if val.contains('\n') {
                                     let mut s = (*state).clone();
-                                    let lines: Vec<String> = val.lines().map(|l| l.trim().to_lowercase()).filter(|l| !l.is_empty()).collect();
+                                    let lines: Vec<String> = val.lines()
+                                        .map(|l| l.trim().to_lowercase())
+                                        .filter(|l| !l.is_empty())
+                                        .collect();
                                     for line in lines {
                                         for cat in (*categories).iter() {
                                             for item in &cat.items {
-                                                if item.name.to_lowercase() == line || item.name.to_lowercase().contains(&line) {
+                                                if item.name.to_lowercase() == line
+                                                    || item.name.to_lowercase().contains(&line)
+                                                {
                                                     if !s.selected_pathogens.contains(&item.name) {
                                                         s.selected_pathogens.push(item.name.clone());
                                                     }
@@ -632,7 +692,9 @@ fn render_patogeny(
                         }
                     />
                 </div>
-                <div class="wizard-selected">{format!("Selected: {}", state.selected_pathogens.len())}</div>
+                <div class="wizard-selected">
+                    {format!("Wybrano: {}", state.selected_pathogens.len())}
+                </div>
                 <div class="selected-list">
                     {for state.selected_pathogens.iter().map(|name| {
                         let desc = desc_map.get(name).cloned().unwrap_or_default();
@@ -640,19 +702,23 @@ fn render_patogeny(
                             <div class="selected-item">
                                 <span class="selected-item-name">{name}</span>
                                 if !desc.is_empty() {
-                                    <span class="selected-item-desc">{format!(" - {desc}")}</span>
+                                    <span class="selected-item-desc">{&desc}</span>
                                 }
                             </div>
                         }
                     })}
                 </div>
                 <div class="patogeny-actions">
-                    <button class="wizard-button" onclick={on_copy} disabled={state.selected_pathogens.is_empty()}>
-                        {"Copy"}
-                    </button>
-                    <button class="wizard-button wizard-button-secondary" onclick={on_reset_selection} disabled={state.selected_pathogens.is_empty()}>
-                        {"Reset"}
-                    </button>
+                    <button
+                        class="wizard-button"
+                        onclick={on_copy}
+                        disabled={state.selected_pathogens.is_empty()}
+                    >{"⎘ Kopiuj"}</button>
+                    <button
+                        class="wizard-button-secondary"
+                        onclick={on_reset_selection}
+                        disabled={state.selected_pathogens.is_empty()}
+                    >{"↺ Wyczyść"}</button>
                 </div>
             </div>
             <div class="right-column">
@@ -661,11 +727,9 @@ fn render_patogeny(
                         let items: Vec<_> = cat.items.iter().filter(|i| {
                             filter.is_empty() || i.name.to_lowercase().contains(&filter)
                         }).collect();
-
                         if items.is_empty() && !filter.is_empty() {
                             return html! {};
                         }
-
                         let cat_name = cat.name.clone();
                         html! {
                             <div class="boxes">
